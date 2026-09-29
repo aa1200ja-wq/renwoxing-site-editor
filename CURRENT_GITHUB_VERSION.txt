@@ -1,0 +1,4 @@
+GitHub repository: aa1200ja-wq/renwoxing-site-editor
+Packaged commit: 65cf9e948d99993e280f41528b0d71f9e8ef997b
+Short commit: 65cf9e9
+Source branch at packaging time: main
