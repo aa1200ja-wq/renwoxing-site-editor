@@ -72,6 +72,10 @@ function sectionVisuals(index: number): SiteElement[] {
       content: "members",
       desktop: layout(850, 600, 700, 250, 5),
       mobile: layout(20, 635, 350, 180, 5),
+      settings: {
+        desktop: { speed: 42 },
+        mobile: { speed: 120 },
+      },
     }];
   }
 
@@ -191,7 +195,7 @@ const home: SitePage = {
       animation: {
         preset: "slide-right",
         duration: 0.8,
-        delay: 0.12,
+        delay: 0.55,
         easing: "easeOut",
         trigger: "page-enter",
       },
@@ -208,7 +212,7 @@ const home: SitePage = {
       animation: {
         preset: "scale",
         duration: 0.9,
-        delay: 0.18,
+        delay: 0.7,
         easing: "easeOut",
         trigger: "page-enter",
       },
@@ -223,7 +227,7 @@ const home: SitePage = {
       animation: {
         preset: "fade-up",
         duration: 0.75,
-        delay: 0.4,
+        delay: 1.0,
         easing: "easeOut",
         trigger: "page-enter",
       },
