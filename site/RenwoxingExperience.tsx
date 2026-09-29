@@ -54,6 +54,27 @@ function useFitScale(
   return scale;
 }
 
+const pageTransition = {
+  initial: {
+    opacity: 0.25,
+    x: -110,
+    rotateY: -16,
+    clipPath: "inset(0 100% 0 0)",
+  },
+  animate: {
+    opacity: 1,
+    x: 0,
+    rotateY: 0,
+    clipPath: "inset(0 0% 0 0)",
+  },
+  exit: {
+    opacity: 0.45,
+    x: 55,
+    rotateY: 8,
+    clipPath: "inset(0 0 0 22%)",
+  },
+};
+
 export function RenwoxingExperience() {
   const [pageId, setPageId] = useState("home");
   const [lightboxSrc, setLightboxSrc] =
@@ -85,26 +106,20 @@ export function RenwoxingExperience() {
   }
 
   return (
-    <main className="public-site-shell">
-      <AnimatePresence mode="wait">
+    <main className="public-site-shell book-perspective">
+      <AnimatePresence initial={false} mode="sync">
         <motion.div
           key={page.id}
-          className="public-stage-frame"
+          className="public-stage-frame book-page-turn"
           style={{
             width: size.width * scale,
             height: size.height * scale,
           }}
-          initial={{
-            opacity: 0,
-            x: page.id === "home" ? -18 : 36,
-          }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{
-            opacity: 0,
-            x: page.id === "home" ? -18 : 36,
-          }}
+          initial={pageTransition.initial}
+          animate={pageTransition.animate}
+          exit={pageTransition.exit}
           transition={{
-            duration: 0.55,
+            duration: 0.82,
             ease: [0.22, 1, 0.36, 1],
           }}
         >
@@ -115,6 +130,13 @@ export function RenwoxingExperience() {
             transformOrigin="top left"
             className="public-site-stage"
             onAction={handleAction}
+          />
+          <motion.span
+            className="book-page-shadow"
+            initial={{ opacity: 0.5 }}
+            animate={{ opacity: 0 }}
+            transition={{ duration: 0.75 }}
+            aria-hidden="true"
           />
         </motion.div>
       </AnimatePresence>
