@@ -19,16 +19,15 @@
 }
 
 .member-card {
-  flex: 0 0 122px;
-  height: 202px;
-  padding: 12px;
+  position: relative;
+  flex: 0 0 132px;
+  height: 214px;
+  padding: 0;
+  overflow: hidden;
   border: 1px solid rgba(107, 73, 31, .25);
-  background: #e4d4b6;
-  color: #17130e;
+  background: #17130e;
+  color: #f1e6d4;
   text-align: left;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
   cursor: pointer;
 }
 
@@ -36,20 +35,46 @@
   transform: translateY(18px);
 }
 
+.member-card > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.member-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(8, 6, 4, .88));
+}
+
 .member-card > span {
-  margin-bottom: auto;
-  font: 44px Georgia, serif;
-  color: rgba(118, 78, 31, .22);
+  position: absolute;
+  z-index: 2;
+  top: 10px;
+  left: 10px;
+  font: 26px Georgia, serif;
+  color: rgba(239, 227, 202, .72);
+}
+
+.member-card-copy {
+  position: absolute;
+  z-index: 2;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
 }
 
 .member-card strong {
+  display: block;
   font: 600 13px Arial, sans-serif;
 }
 
 .member-card small {
-  margin-top: 5px;
+  display: block;
+  margin-top: 4px;
   font: 700 9px Arial, sans-serif;
-  color: #796247;
+  color: #d0a45f;
 }
 
 .member-modal-backdrop {
@@ -58,7 +83,7 @@
   inset: 0;
   display: grid;
   place-items: center;
-  background: rgba(7, 6, 4, .7);
+  background: rgba(7, 6, 4, .72);
   backdrop-filter: blur(7px);
 }
 
@@ -72,25 +97,12 @@
 }
 
 .member-alt-photo {
-  height: min(52vh, 420px);
-  display: grid;
-  place-items: center;
-  align-content: center;
-  gap: 8px;
-  background:
-    radial-gradient(circle at 50% 35%, rgba(201, 148, 61, .22), transparent 40%),
-    #19140e;
-  color: #c99542;
-}
-
-.member-alt-photo span {
-  font: 500 58px Georgia, serif;
-  letter-spacing: .08em;
-}
-
-.member-alt-photo small {
-  font: 700 10px Arial, sans-serif;
-  letter-spacing: .12em;
+  display: block;
+  width: 100%;
+  height: min(52vh, 440px);
+  object-fit: cover;
+  object-position: center;
+  background: #19140e;
 }
 
 .member-modal p {
@@ -135,8 +147,8 @@
   }
 
   .member-card {
-    flex-basis: 96px;
-    height: 142px;
+    flex-basis: 102px;
+    height: 152px;
   }
 
   .member-track {
