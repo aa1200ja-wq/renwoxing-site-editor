@@ -78,6 +78,8 @@ export function EditorShell({ initialProject }: { initialProject: SiteProject })
     patch: Record<string, string | number>,
   ) {
     if (!selectedId) return;
+    const styleKey =
+      viewport === "desktop" ? "desktopStyle" : "mobileStyle";
 
     setProject((current) => ({
       ...current,
@@ -90,9 +92,40 @@ export function EditorShell({ initialProject }: { initialProject: SiteProject })
                 element.id === selectedId
                   ? {
                       ...element,
-                      style: {
-                        ...element.style,
+                      [styleKey]: {
+                        ...element[styleKey],
                         ...patch,
+                      },
+                    }
+                  : element,
+              ),
+            },
+      ),
+    }));
+  }
+
+  function patchSelectedSetting(
+    patch: Record<string, string | number | boolean>,
+  ) {
+    if (!selectedId) return;
+
+    setProject((current) => ({
+      ...current,
+      pages: current.pages.map((item) =>
+        item.id !== page.id
+          ? item
+          : {
+              ...item,
+              elements: item.elements.map((element) =>
+                element.id === selectedId
+                  ? {
+                      ...element,
+                      settings: {
+                        ...element.settings,
+                        [viewport]: {
+                          ...element.settings?.[viewport],
+                          ...patch,
+                        },
                       },
                     }
                   : element,
@@ -194,6 +227,7 @@ export function EditorShell({ initialProject }: { initialProject: SiteProject })
         onLayoutChange={patchSelectedLayout}
         onContentChange={patchSelectedContent}
         onStyleChange={patchSelectedStyle}
+        onSettingChange={patchSelectedSetting}
         onDelete={deleteSelectedElement}
       />
     </div>
