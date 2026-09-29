@@ -8,6 +8,9 @@ type Props = {
   onLayoutChange: (patch: Partial<ElementLayout>) => void;
   onContentChange: (content: string) => void;
   onStyleChange: (patch: Record<string, string | number>) => void;
+  onSettingChange: (
+    patch: Record<string, string | number | boolean>,
+  ) => void;
   onDelete: () => void;
 };
 
@@ -38,6 +41,7 @@ export function InspectorPanel({
   onLayoutChange,
   onContentChange,
   onStyleChange,
+  onSettingChange,
   onDelete,
 }: Props) {
   if (!element) {
@@ -61,6 +65,20 @@ export function InspectorPanel({
   ].includes(element.type);
   const editableTypography =
     element.type === "text" || element.type === "button";
+  const viewportStyle =
+    viewport === "desktop"
+      ? element.desktopStyle
+      : element.mobileStyle;
+  const fontSize = Number(
+    viewportStyle?.fontSize ?? element.style?.fontSize ?? 16,
+  );
+  const isMemberCarousel =
+    element.type === "component" &&
+    element.content === "members";
+  const carouselSpeed = Number(
+    element.settings?.[viewport]?.speed ??
+      (viewport === "mobile" ? 90 : 38),
+  );
 
   return (
     <aside className="editor-inspector">
@@ -89,15 +107,36 @@ export function InspectorPanel({
 
       {editableTypography && (
         <label className="content-field">
-          <span>字體大小</span>
+          <span>
+            字體大小（{viewport === "desktop" ? "桌機" : "手機"}）
+          </span>
           <input
             type="number"
             min="6"
             max="300"
-            value={Number(element.style?.fontSize ?? 16)}
+            value={fontSize}
             onChange={(event) =>
               onStyleChange({
                 fontSize: Number(event.target.value),
+              })
+            }
+          />
+        </label>
+      )}
+
+      {isMemberCarousel && (
+        <label className="content-field">
+          <span>
+            輪播秒數（{viewport === "desktop" ? "桌機" : "手機"}）
+          </span>
+          <input
+            type="number"
+            min="10"
+            max="240"
+            value={carouselSpeed}
+            onChange={(event) =>
+              onSettingChange({
+                speed: Number(event.target.value),
               })
             }
           />
