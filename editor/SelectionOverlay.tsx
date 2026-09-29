@@ -11,12 +11,32 @@ type Props = {
   onLayoutChange: (patch: Partial<ElementLayout>) => void;
 };
 
-export function SelectionOverlay({ selectedId, onSelect, onLayoutChange }: Props) {
+export function SelectionOverlay({
+  selectedId,
+  onSelect,
+  onLayoutChange,
+}: Props) {
   const [target, setTarget] = useState<HTMLElement | null>(null);
+  const [guidelines, setGuidelines] = useState<HTMLElement[]>([]);
 
   useEffect(() => {
-    if (!selectedId) { setTarget(null); return; }
-    setTarget(document.querySelector<HTMLElement>("[data-editor-id=\"" + selectedId + "\"]"));
+    if (!selectedId) {
+      setTarget(null);
+      setGuidelines([]);
+      return;
+    }
+
+    const selected = document.querySelector<HTMLElement>(
+      '[data-editor-id="' + selectedId + '"]',
+    );
+    const others = Array.from(
+      document.querySelectorAll<HTMLElement>(
+        "[data-editor-element='true']",
+      ),
+    ).filter((element) => element !== selected);
+
+    setTarget(selected);
+    setGuidelines(others);
   }, [selectedId]);
 
   return (
@@ -28,12 +48,40 @@ export function SelectionOverlay({ selectedId, onSelect, onLayoutChange }: Props
         rotatable
         snappable
         origin={false}
+        snapThreshold={6}
+        snapGap
+        snapCenter
+        isDisplaySnapDigit={false}
+        elementGuidelines={guidelines}
+        verticalGuidelines={[800]}
+        horizontalGuidelines={[450]}
+        snapDirections={{
+          top: true,
+          left: true,
+          bottom: true,
+          right: true,
+          center: true,
+          middle: true,
+        }}
+        elementSnapDirections={{
+          top: true,
+          left: true,
+          bottom: true,
+          right: true,
+          center: true,
+          middle: true,
+        }}
         onDrag={({ target, left, top }) => {
           target.style.left = left + "px";
           target.style.top = top + "px";
         }}
         onDragEnd={({ lastEvent }) => {
-          if (lastEvent) onLayoutChange({ x: lastEvent.left, y: lastEvent.top });
+          if (lastEvent) {
+            onLayoutChange({
+              x: lastEvent.left,
+              y: lastEvent.top,
+            });
+          }
         }}
         onResize={({ target, width, height, drag }) => {
           target.style.width = width + "px";
@@ -43,24 +91,40 @@ export function SelectionOverlay({ selectedId, onSelect, onLayoutChange }: Props
         }}
         onResizeEnd={({ lastEvent }) => {
           if (!lastEvent) return;
-          onLayoutChange({ width: lastEvent.width, height: lastEvent.height, x: lastEvent.drag.left, y: lastEvent.drag.top });
+          onLayoutChange({
+            width: lastEvent.width,
+            height: lastEvent.height,
+            x: lastEvent.drag.left,
+            y: lastEvent.drag.top,
+          });
         }}
         onRotate={({ target, rotation }) => {
-          target.style.transform = "rotate(" + rotation + "deg)";
+          target.style.transform =
+            "rotate(" + rotation + "deg)";
         }}
         onRotateEnd={({ lastEvent }) => {
-          if (lastEvent) onLayoutChange({ rotation: lastEvent.rotation });
+          if (lastEvent) {
+            onLayoutChange({
+              rotation: lastEvent.rotation,
+            });
+          }
         }}
       />
+
       <Selecto
         dragContainer=".editor-canvas"
-        selectableTargets={["[data-editor-element='true']"]}
+        selectableTargets={[
+          "[data-editor-element='true']",
+        ]}
         hitRate={20}
         selectByClick
         selectFromInside={false}
         continueSelect={false}
         onSelectEnd={({ selected }) => {
-          const id = selected[0]?.getAttribute("data-editor-id") ?? null;
+          const id =
+            selected[0]?.getAttribute(
+              "data-editor-id",
+            ) ?? null;
           onSelect(id);
         }}
       />
