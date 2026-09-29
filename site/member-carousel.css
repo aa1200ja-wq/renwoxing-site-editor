@@ -1,0 +1,154 @@
+.member-carousel {
+  position: absolute;
+  right: 0;
+  bottom: 7vh;
+  width: 47vw;
+  overflow: hidden;
+  padding: 10px 0 28px 2vw;
+}
+
+.member-track {
+  display: flex;
+  gap: 12px;
+  width: max-content;
+  animation: memberMarquee 38s linear infinite;
+}
+
+.member-carousel:hover .member-track {
+  animation-play-state: paused;
+}
+
+.member-card {
+  flex: 0 0 122px;
+  height: 202px;
+  padding: 12px;
+  border: 1px solid rgba(107, 73, 31, .25);
+  background: #e4d4b6;
+  color: #17130e;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  cursor: pointer;
+}
+
+.member-card:nth-child(even) {
+  transform: translateY(18px);
+}
+
+.member-card > span {
+  margin-bottom: auto;
+  font: 44px Georgia, serif;
+  color: rgba(118, 78, 31, .22);
+}
+
+.member-card strong {
+  font: 600 13px Arial, sans-serif;
+}
+
+.member-card small {
+  margin-top: 5px;
+  font: 700 9px Arial, sans-serif;
+  color: #796247;
+}
+
+.member-modal-backdrop {
+  position: fixed;
+  z-index: 50;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(7, 6, 4, .7);
+  backdrop-filter: blur(7px);
+}
+
+.member-modal {
+  position: relative;
+  width: min(72vw, 620px);
+  padding: 24px;
+  background: #efe3ca;
+  color: #17130e;
+  box-shadow: 0 28px 90px rgba(0, 0, 0, .45);
+}
+
+.member-alt-photo {
+  height: min(52vh, 420px);
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(201, 148, 61, .22), transparent 40%),
+    #19140e;
+  color: #c99542;
+}
+
+.member-alt-photo span {
+  font: 500 58px Georgia, serif;
+  letter-spacing: .08em;
+}
+
+.member-alt-photo small {
+  font: 700 10px Arial, sans-serif;
+  letter-spacing: .12em;
+}
+
+.member-modal p {
+  margin: 22px 0 4px;
+  color: #9d6b2a;
+  font: 700 10px Arial, sans-serif;
+  letter-spacing: .18em;
+}
+
+.member-modal h3 {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 500;
+}
+
+.member-modal-close {
+  position: absolute;
+  z-index: 2;
+  top: 10px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  background: rgba(239, 227, 202, .92);
+  color: #17130e;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+@keyframes memberMarquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-50% - 6px)); }
+}
+
+@media (max-width: 760px) {
+  .member-carousel {
+    display: block;
+    left: 24px;
+    right: 0;
+    bottom: 22px;
+    width: calc(100vw - 24px);
+  }
+
+  .member-card {
+    flex-basis: 96px;
+    height: 142px;
+  }
+
+  .member-track {
+    animation-duration: 32s;
+  }
+
+  .member-modal {
+    width: calc(100vw - 32px);
+    padding: 16px;
+  }
+
+  .member-alt-photo {
+    height: 46vh;
+  }
+}
