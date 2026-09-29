@@ -6,9 +6,9 @@ import type { ViewportMode } from "./model";
 import "./special-elements.css";
 
 const vinylAssets = {
-  vinyl: "https://at.adobe.com/3NErmny4FBbRuQVs",
-  label: "https://at.adobe.com/AOMAGP6BeJpm2mWt",
-  sax: "https://at.adobe.com/5A0ozpiYI4J3NTFA",
+  vinyl: "/assets/renwoxing/vinyl-disc.webp",
+  label: "/assets/renwoxing/label-gold.webp",
+  sax: "/assets/renwoxing/saxophone.webp",
 };
 
 type Props = {
