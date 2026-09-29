@@ -1,0 +1,35 @@
+name: Package local inspection ZIP
+
+on:
+  push:
+    branches:
+      - package-export-65cf9e9
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout package snapshot
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Remove packaging metadata
+        run: |
+          rm -rf .git .github
+          rm -f renwoxing-latest-local.zip
+
+      - name: Create complete ZIP
+        run: |
+          zip -r renwoxing-latest-local-65cf9e9.zip . -x "renwoxing-latest-local-65cf9e9.zip"
+
+      - name: Upload ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: renwoxing-latest-local-65cf9e9
+          path: renwoxing-latest-local-65cf9e9.zip
+          if-no-files-found: error
+          retention-days: 1
