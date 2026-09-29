@@ -45,7 +45,7 @@ export function makeNavElements(
       fontWeight: 700,
       whiteSpace: "nowrap",
       textAlign: "center",
-      borderBottom: "2px solid rgba(159, 105, 34, .72)",
+      borderBottom: "1px solid rgba(110, 77, 39, .35)",
       paddingBottom: 5,
     },
   }));
