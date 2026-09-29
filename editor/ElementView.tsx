@@ -42,7 +42,7 @@ export function ElementView({
   };
 
   return (
-    <motion.div
+    <div
       data-editor-element={editable ? "true" : undefined}
       data-editor-id={editable ? element.id : undefined}
       style={baseStyle}
@@ -56,10 +56,17 @@ export function ElementView({
         if (editable || !element.action) return;
         onAction?.(element);
       }}
-      {...motionProps(element.animation)}
     >
-      <ElementContent element={element} viewport={viewport} />
-    </motion.div>
+      <motion.div
+        className="site-element-motion"
+        {...motionProps(element.animation)}
+      >
+        <ElementContent
+          element={element}
+          viewport={viewport}
+        />
+      </motion.div>
+    </div>
   );
 }
 
