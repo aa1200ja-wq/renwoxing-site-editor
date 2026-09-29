@@ -3,6 +3,7 @@
 import type { SectionId } from "./scene-data";
 import "./section-content.css";
 import { MemberCarousel } from "./MemberCarousel";
+import { ActivityGallery } from "./ActivityGallery";
 
 export function SectionContent({ section }: { section: SectionId }) {
   if (section === "about") return <AboutVisual />;
@@ -28,26 +29,7 @@ function AboutVisual() {
 }
 
 function EventsVisual() {
-  const events = [
-    { label: "LIVE", image: "/assets/renwoxing/activity-01.webp" },
-    { label: "SESSION", image: "/assets/renwoxing/activity-02.webp" },
-    { label: "MEMORY", image: "/assets/renwoxing/activity-03.webp" },
-  ];
-
-  return (
-    <div className="event-grid">
-      {events.map((event, index) => (
-        <div className="event-tile" key={event.label}>
-          <img src={event.image} alt="任我行活動紀錄" />
-          <span>0{index + 1}</span>
-          <div className="event-copy">
-            <strong>{event.label}</strong>
-            <small>任我行活動紀錄</small>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
+  return <ActivityGallery />;
 }
 
 function MembersVisual() {
