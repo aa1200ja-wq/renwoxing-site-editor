@@ -28,13 +28,22 @@ function AboutVisual() {
 }
 
 function EventsVisual() {
+  const events = [
+    { label: "LIVE", image: "/assets/renwoxing/activity-01.webp" },
+    { label: "SESSION", image: "/assets/renwoxing/activity-02.webp" },
+    { label: "MEMORY", image: "/assets/renwoxing/activity-03.webp" },
+  ];
+
   return (
     <div className="event-grid">
-      {["LIVE", "SESSION", "MEMORY"].map((label, index) => (
-        <div className="event-tile" key={label}>
+      {events.map((event, index) => (
+        <div className="event-tile" key={event.label}>
+          <img src={event.image} alt="任我行活動紀錄" />
           <span>0{index + 1}</span>
-          <strong>{label}</strong>
-          <small>任我行活動紀錄</small>
+          <div className="event-copy">
+            <strong>{event.label}</strong>
+            <small>任我行活動紀錄</small>
+          </div>
         </div>
       ))}
     </div>
