@@ -48,6 +48,27 @@ export function makeNavElements(
   }));
 }
 
+export function makeContactElements(
+  layout: LayoutFactory,
+): SiteElement[] {
+  const items = ["01 演出邀約", "02 活動合作", "03 社團交流"];
+
+  return items.map((content, index) => ({
+    id: `contact-item-${index + 1}`,
+    type: "text",
+    name: `聯絡項目 ${index + 1}`,
+    content,
+    desktop: layout(1100, 560 + index * 72, 360, 62, 4),
+    mobile: layout(70, 650 + index * 48, 250, 42, 4),
+    style: {
+      color: "#986626",
+      fontSize: 54,
+      lineHeight: 1.15,
+      fontWeight: 500,
+    },
+  }));
+}
+
 export function makeEventElements(
   layout: LayoutFactory,
 ): SiteElement[] {
@@ -81,6 +102,13 @@ export function makeHomeExtraElements(
       content: "SAXOPHONE ENSEMBLE",
       desktop: layout(235, 78, 230, 26, 6),
       mobile: layout(24, 42, 210, 24, 6),
+      animation: {
+        preset: "fade",
+        duration: 0.8,
+        delay: 0.1,
+        easing: "easeOut",
+        trigger: "page-enter",
+      },
       style: {
         color: "#c68b2d",
         fontSize: 11,
@@ -99,6 +127,13 @@ export function makeHomeExtraElements(
         type: "navigate",
         targetPageId: "video",
       },
+      animation: {
+        preset: "slide-left",
+        duration: 0.7,
+        delay: 0.25,
+        easing: "easeOut",
+        trigger: "page-enter",
+      },
       style: {
         color: "#d29a3d",
         fontSize: 16,
@@ -112,6 +147,13 @@ export function makeHomeExtraElements(
       content: "旋律，仍在前行。",
       desktop: layout(1180, 465, 210, 32, 7),
       mobile: layout(220, 585, 150, 28, 7),
+      animation: {
+        preset: "fade-up",
+        duration: 0.7,
+        delay: 0.35,
+        easing: "easeOut",
+        trigger: "page-enter",
+      },
       style: {
         color: "#e8ddc6",
         fontSize: 16,
@@ -125,6 +167,13 @@ export function makeHomeExtraElements(
       content: "",
       desktop: layout(1180, 505, 32, 2, 7),
       mobile: layout(220, 620, 28, 2, 7),
+      animation: {
+        preset: "fade",
+        duration: 0.7,
+        delay: 0.45,
+        easing: "easeOut",
+        trigger: "page-enter",
+      },
       style: { background: "#b8832f" },
     },
     {
@@ -134,6 +183,13 @@ export function makeHomeExtraElements(
       content: "PEOPLE\nMUSIC\nFURTHER",
       desktop: layout(1180, 525, 110, 70, 7),
       mobile: layout(220, 635, 100, 60, 7),
+      animation: {
+        preset: "fade-up",
+        duration: 0.7,
+        delay: 0.5,
+        easing: "easeOut",
+        trigger: "page-enter",
+      },
       style: {
         color: "#b88734",
         fontSize: 10,
