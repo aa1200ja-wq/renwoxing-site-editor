@@ -44,6 +44,12 @@ export type SiteElement = {
   desktop: ElementLayout;
   mobile: ElementLayout;
   style?: Record<string, string | number>;
+  desktopStyle?: Record<string, string | number>;
+  mobileStyle?: Record<string, string | number>;
+  settings?: Partial<Record<
+    ViewportMode,
+    Record<string, string | number | boolean>
+  >>;
   animation?: AnimationSpec;
   action?: SiteAction;
 };
