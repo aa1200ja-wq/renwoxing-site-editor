@@ -35,6 +35,7 @@ function sharedInnerElements(): SiteElement[] {
       content: "vinyl-compact",
       desktop: layout(-80, 170, 560, 560, 2),
       mobile: layout(-115, 70, 300, 300, 2),
+      action: { type: "navigate", targetPageId: "home" },
     },
     {
       id: "back-home",
@@ -43,6 +44,7 @@ function sharedInnerElements(): SiteElement[] {
       content: "← 回到唱片",
       desktop: layout(1220, 830, 150, 40, 6),
       mobile: layout(220, 790, 145, 38, 6),
+      action: { type: "navigate", targetPageId: "home" },
       style: { color: "#5e4a32", borderColor: "transparent" },
     },
   ];
@@ -181,6 +183,7 @@ const home: SitePage = {
       content: "vinyl",
       desktop: layout(390, 80, 720, 720, 3),
       mobile: layout(35, 210, 330, 330, 3),
+      action: { type: "navigate", targetPageId: "about" },
     },
     {
       id: "tap-cue",
@@ -189,6 +192,7 @@ const home: SitePage = {
       content: "tap-cue",
       desktop: layout(930, 620, 180, 210, 7),
       mobile: layout(240, 650, 120, 140, 7),
+      action: { type: "navigate", targetPageId: "about" },
     },
     {
       id: "hero-tagline",
