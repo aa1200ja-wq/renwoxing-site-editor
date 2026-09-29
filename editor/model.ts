@@ -1,5 +1,5 @@
 export type ViewportMode = "desktop" | "mobile";
-export type ElementType = "text" | "image" | "youtube" | "button" | "line";
+export type ElementType = "text" | "image" | "youtube" | "button" | "line" | "component";
 
 export type ViewportSize = {
   width: number;
