@@ -1,11 +1,15 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ActivityGallery } from "@/site/ActivityGallery";
-import { MemberCarousel } from "@/site/MemberCarousel";
-import { TapCue } from "@/site/TapCue";
-import { VINYL_ASSETS } from "@/site/VinylStage";
+import { members } from "@/site/member-data";
 import type { ViewportMode } from "./model";
+import "./special-elements.css";
+
+const vinylAssets = {
+  vinyl: "https://at.adobe.com/3NErmny4FBbRuQVs",
+  label: "https://at.adobe.com/AOMAGP6BeJpm2mWt",
+  sax: "https://at.adobe.com/5A0ozpiYI4J3NTFA",
+};
 
 type Props = {
   name: string;
@@ -21,21 +25,24 @@ export function SpecialElement({
   if (name === "vinyl" || name === "vinyl-compact") {
     return <EditorVinyl />;
   }
-  if (name === "tap-cue") {
-    return <TapCue embedded />;
-  }
+
   if (name === "members") {
     const fallback = viewport === "mobile" ? 120 : 42;
     return (
-      <MemberCarousel
-        embedded
+      <EditorMemberCarousel
         speedSeconds={Number(settings?.speed ?? fallback)}
       />
     );
   }
+
   if (name === "activities") {
-    return <ActivityGallery embedded />;
+    return <div className="editor-special-placeholder">活動照片</div>;
   }
+
+  if (name === "tap-cue") {
+    return <div className="editor-special-placeholder">點擊提示</div>;
+  }
+
   return <div>{name}</div>;
 }
 
@@ -51,10 +58,37 @@ function EditorVinyl() {
           repeat: Infinity,
         }}
       >
-        <img src={VINYL_ASSETS.vinyl} alt="" />
-        <img src={VINYL_ASSETS.label} alt="" />
-        <img src={VINYL_ASSETS.sax} alt="" />
+        <img src={vinylAssets.vinyl} alt="" />
+        <img src={vinylAssets.label} alt="" />
+        <img src={vinylAssets.sax} alt="" />
       </motion.div>
+    </div>
+  );
+}
+
+function EditorMemberCarousel({
+  speedSeconds,
+}: {
+  speedSeconds: number;
+}) {
+  const loopMembers = [...members, ...members];
+
+  return (
+    <div className="editor-member-carousel">
+      <div
+        className="editor-member-track"
+        style={{ animationDuration: speedSeconds + "s" }}
+      >
+        {loopMembers.map((member, index) => (
+          <div
+            className="editor-member-card"
+            key={member.id + "-" + index}
+          >
+            <img src={member.cover} alt={member.name} />
+            <strong>{member.name}</strong>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
