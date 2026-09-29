@@ -27,6 +27,11 @@ export type AnimationSpec = {
   trigger: AnimationTrigger;
 };
 
+export type SiteAction = {
+  type: "navigate";
+  targetPageId: string;
+};
+
 export type SiteElement = {
   id: string;
   type: ElementType;
@@ -36,6 +41,7 @@ export type SiteElement = {
   mobile: ElementLayout;
   style?: Record<string, string | number>;
   animation?: AnimationSpec;
+  action?: SiteAction;
 };
 
 export type SitePage = {
