@@ -18,11 +18,13 @@ export function SelectionOverlay({
 }: Props) {
   const [target, setTarget] = useState<HTMLElement | null>(null);
   const [guidelines, setGuidelines] = useState<HTMLElement[]>([]);
+  const [canvasCenter, setCanvasCenter] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     if (!selectedId) {
       setTarget(null);
       setGuidelines([]);
+      setCanvasCenter({ x: 0, y: 0 });
       return;
     }
 
@@ -35,8 +37,13 @@ export function SelectionOverlay({
       ),
     ).filter((element) => element !== selected);
 
+    const stage = selected?.closest<HTMLElement>(".site-stage");
     setTarget(selected);
     setGuidelines(others);
+    setCanvasCenter({
+      x: stage ? stage.clientWidth / 2 : 0,
+      y: stage ? stage.clientHeight / 2 : 0,
+    });
   }, [selectedId]);
 
   return (
@@ -53,8 +60,8 @@ export function SelectionOverlay({
         snapCenter
         isDisplaySnapDigit={false}
         elementGuidelines={guidelines}
-        verticalGuidelines={[800]}
-        horizontalGuidelines={[450]}
+        verticalGuidelines={canvasCenter.x ? [canvasCenter.x] : []}
+        horizontalGuidelines={canvasCenter.y ? [canvasCenter.y] : []}
         snapDirections={{
           top: true,
           left: true,
