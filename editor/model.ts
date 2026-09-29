@@ -17,7 +17,7 @@ export type ElementLayout = {
 };
 
 export type AnimationTrigger = "page-enter" | "hover" | "loop";
-export type AnimationPreset = "none" | "fade" | "fade-up" | "slide-left" | "slide-right" | "scale" | "spin";
+export type AnimationPreset = "none" | "fade" | "fade-up" | "slide-left" | "slide-right" | "scale" | "spin" | "blink" | "hand-cycle" | "hover-scale";
 
 export type AnimationSpec = {
   preset: AnimationPreset;
@@ -27,10 +27,14 @@ export type AnimationSpec = {
   trigger: AnimationTrigger;
 };
 
-export type SiteAction = {
-  type: "navigate";
-  targetPageId: string;
-};
+export type SiteAction =
+  | {
+      type: "navigate";
+      targetPageId: string;
+    }
+  | {
+      type: "lightbox";
+    };
 
 export type SiteElement = {
   id: string;
