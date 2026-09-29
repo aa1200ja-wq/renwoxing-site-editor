@@ -148,3 +148,36 @@ button { cursor: pointer; }
 .public-site-stage {
   box-shadow: none;
 }
+
+.book-perspective {
+  perspective: 1800px;
+  perspective-origin: 12% 50%;
+}
+
+.book-page-turn {
+  transform-style: preserve-3d;
+  transform-origin: left center;
+  will-change: transform, clip-path, opacity;
+}
+
+.book-page-shadow {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 12%;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(34, 20, 8, .38),
+    rgba(34, 20, 8, .08),
+    transparent
+  );
+  mix-blend-mode: multiply;
+}
+
+.moveable-line.moveable-guideline {
+  background: #39a7ff !important;
+}
+
+.moveable-line.moveable-dashed {
+  background: #39a7ff !important;
+}
