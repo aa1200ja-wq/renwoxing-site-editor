@@ -2,8 +2,8 @@
 
 import { motion } from "framer-motion";
 import { VinylStage } from "./VinylStage";
+import { TapCue } from "./TapCue";
 
-const handUrl = "https://at.adobe.com/5PsW5E8IbnwQQyie";
 
 export function HomeScene({ onEnter }: { onEnter: () => void }) {
   return (
@@ -39,17 +39,7 @@ export function HomeScene({ onEnter }: { onEnter: () => void }) {
         <small>PEOPLE<br />MUSIC<br />FURTHER</small>
       </div>
 
-      <div className="tap-cue" aria-hidden="true">
-        <motion.img
-          src={handUrl}
-          alt=""
-          animate={{ y: [0, -10, 0], scale: [1, 1.04, 1] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-        />
-        <strong>點一下</strong>
-        <span>進入專輯</span>
-        <small>TAP TO PLAY</small>
-      </div>
+      <TapCue />
 
       <div className="hero-tagline">
         <span>／</span>
