@@ -1,0 +1,27 @@
+name: Package local Supabase test ZIP
+
+on:
+  push:
+    branches:
+      - package-export-9084a6e
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Remove packaging metadata
+        run: rm -rf .git .github
+      - name: Create complete ZIP
+        run: zip -r renwoxing-local-supabase-9084a6e.zip . -x "renwoxing-local-supabase-9084a6e.zip"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: renwoxing-local-supabase-9084a6e
+          path: renwoxing-local-supabase-9084a6e.zip
+          if-no-files-found: error
+          retention-days: 1
