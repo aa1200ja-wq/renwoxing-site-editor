@@ -1,7 +1,11 @@
 import { CraftBridge } from "@/editor/CraftBridge";
 import { EditorShell } from "@/editor/EditorShell";
-import { sampleProject } from "@/editor/sample-project";
+import { renwoxingProject } from "@/editor/renwoxing-project";
 
 export default function EditorPage() {
-  return <CraftBridge><EditorShell initialProject={sampleProject} /></CraftBridge>;
+  return (
+    <CraftBridge>
+      <EditorShell initialProject={renwoxingProject} />
+    </CraftBridge>
+  );
 }
