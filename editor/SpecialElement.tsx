@@ -25,7 +25,7 @@ export function SpecialElement({
     return <TapCue embedded />;
   }
   if (name === "members") {
-    const fallback = viewport === "mobile" ? 90 : 38;
+    const fallback = viewport === "mobile" ? 120 : 42;
     return (
       <MemberCarousel
         embedded
