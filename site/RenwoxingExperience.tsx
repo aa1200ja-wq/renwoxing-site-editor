@@ -6,6 +6,7 @@ import { ContentScene } from "./ContentScene";
 import { HomeScene } from "./HomeScene";
 import type { SectionId } from "./scene-data";
 import "./renwoxing.css";
+import "./renwoxing-mobile.css";
 
 export function RenwoxingExperience() {
   const [entered, setEntered] = useState(false);
