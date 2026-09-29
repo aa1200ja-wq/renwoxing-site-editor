@@ -8,8 +8,10 @@ import "./member-carousel.css";
 
 export function MemberCarousel({
   embedded = false,
+  speedSeconds = 38,
 }: {
   embedded?: boolean;
+  speedSeconds?: number;
 }) {
   const [selected, setSelected] = useState<Member | null>(null);
   const loopMembers = [...members, ...members];
@@ -78,7 +80,10 @@ export function MemberCarousel({
         }
         aria-label="十位人物慢速輪播"
       >
-        <div className="member-track">
+        <div
+          className="member-track"
+          style={{ animationDuration: speedSeconds + "s" }}
+        >
           {loopMembers.map((member, index) => (
             <button
               type="button"
