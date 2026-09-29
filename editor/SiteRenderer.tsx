@@ -12,13 +12,14 @@ type Props = {
 };
 
 export function SiteRenderer({ page, viewport, editable = false, selectedId, onSelect }: Props) {
-  const scale = viewport === "mobile" ? 0.62 : 0.72;
+  const size = page.viewport[viewport];
+  const scale = viewport === "mobile" ? 0.84 : 0.72;
   return (
     <div
       className="site-stage"
       style={{
-        width: page.width,
-        height: page.height,
+        width: size.width,
+        height: size.height,
         background: page.background,
         overflow: page.overflow,
         transform: "scale(" + scale + ")",
