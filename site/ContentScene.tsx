@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import type { SectionId } from "./scene-data";
 import { sections } from "./scene-data";
-import { VinylStage } from "./VinylStage";
+import { VinylStage } from "./VinylStage";\nimport { SectionContent } from "./SectionContent";
 
 type Props = {
   active: SectionId;
@@ -62,7 +62,7 @@ export function ContentScene({ active, onChange, onHome }: Props) {
           </motion.article>
         </AnimatePresence>
 
-        <button type="button" className="back-home" onClick={onHome}>
+        <SectionContent section={active} />\n\n        <button type="button" className="back-home" onClick={onHome}>
           ← 回到唱片
         </button>
       </motion.div>
