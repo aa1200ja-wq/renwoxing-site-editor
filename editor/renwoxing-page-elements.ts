@@ -17,13 +17,17 @@ type LayoutFactory = (
   visible: boolean;
 };
 
-export function makeNavElements(layout: LayoutFactory): SiteElement[] {
+const handUrl = "https://at.adobe.com/5PsW5E8IbnwQQyie";
+
+export function makeNavElements(
+  layout: LayoutFactory,
+): SiteElement[] {
   return sections.map((section, index) => ({
     id: `nav-${section.id}`,
     type: "text",
     name: `導覽-${section.label}`,
     content: section.label,
-    desktop: layout(570 + index * 112, 62, 102, 34, 6),
+    desktop: layout(650 + index * 112, 62, 102, 34, 6),
     mobile: layout(
       18 + (index % 3) * 118,
       338 + Math.floor(index / 3) * 30,
@@ -31,7 +35,10 @@ export function makeNavElements(layout: LayoutFactory): SiteElement[] {
       24,
       6,
     ),
-    action: { type: "navigate", targetPageId: section.id },
+    action: {
+      type: "navigate",
+      targetPageId: section.id,
+    },
     style: {
       color: "#3d3022",
       fontSize: 15,
@@ -41,26 +48,38 @@ export function makeNavElements(layout: LayoutFactory): SiteElement[] {
   }));
 }
 
-export function makeEventElements(layout: LayoutFactory): SiteElement[] {
+export function makeEventElements(
+  layout: LayoutFactory,
+): SiteElement[] {
   return [1, 2, 3].map((number, index) => ({
     id: `activity-photo-${number}`,
     type: "image",
     name: `活動照片 ${number}`,
     content: `/assets/renwoxing/activity-0${number}.webp`,
-    desktop: layout(790 + index * 195, 600, 180, 230, 5),
+    desktop: layout(860 + index * 205, 600, 190, 230, 5),
     mobile: layout(24 + index * 112, 655, 104, 140, 5),
+    action: { type: "lightbox" },
+    animation: {
+      preset: "hover-scale",
+      duration: 0.35,
+      delay: 0,
+      easing: "easeOut",
+      trigger: "hover",
+    },
     style: { objectFit: "cover" },
   }));
 }
 
-export function makeHomeExtraElements(layout: LayoutFactory): SiteElement[] {
+export function makeHomeExtraElements(
+  layout: LayoutFactory,
+): SiteElement[] {
   return [
     {
       id: "hero-kicker",
       type: "text",
       name: "首頁英文小標",
       content: "SAXOPHONE ENSEMBLE",
-      desktop: layout(245, 78, 230, 26, 6),
+      desktop: layout(235, 78, 230, 26, 6),
       mobile: layout(24, 42, 210, 24, 6),
       style: {
         color: "#c68b2d",
@@ -74,9 +93,12 @@ export function makeHomeExtraElements(layout: LayoutFactory): SiteElement[] {
       type: "text",
       name: "活動影片欣賞",
       content: "▶ 活動影片欣賞",
-      desktop: layout(1080, 350, 190, 40, 7),
+      desktop: layout(1180, 350, 190, 40, 7),
       mobile: layout(230, 70, 140, 32, 7),
-      action: { type: "navigate", targetPageId: "video" },
+      action: {
+        type: "navigate",
+        targetPageId: "video",
+      },
       style: {
         color: "#d29a3d",
         fontSize: 16,
@@ -88,7 +110,7 @@ export function makeHomeExtraElements(layout: LayoutFactory): SiteElement[] {
       type: "text",
       name: "旋律仍在前行",
       content: "旋律，仍在前行。",
-      desktop: layout(1080, 465, 210, 32, 7),
+      desktop: layout(1180, 465, 210, 32, 7),
       mobile: layout(220, 585, 150, 28, 7),
       style: {
         color: "#e8ddc6",
@@ -101,7 +123,7 @@ export function makeHomeExtraElements(layout: LayoutFactory): SiteElement[] {
       type: "line",
       name: "狀態金線",
       content: "",
-      desktop: layout(1080, 505, 32, 2, 7),
+      desktop: layout(1180, 505, 32, 2, 7),
       mobile: layout(220, 620, 28, 2, 7),
       style: { background: "#b8832f" },
     },
@@ -110,13 +132,84 @@ export function makeHomeExtraElements(layout: LayoutFactory): SiteElement[] {
       type: "text",
       name: "PEOPLE MUSIC FURTHER",
       content: "PEOPLE\nMUSIC\nFURTHER",
-      desktop: layout(1080, 525, 110, 70, 7),
+      desktop: layout(1180, 525, 110, 70, 7),
       mobile: layout(220, 635, 100, 60, 7),
       style: {
         color: "#b88734",
         fontSize: 10,
         lineHeight: 1.45,
         fontWeight: 700,
+      },
+    },
+    {
+      id: "tap-hand",
+      type: "image",
+      name: "手指提示",
+      content: handUrl,
+      desktop: layout(1095, 670, 120, 150, 8),
+      mobile: layout(248, 648, 78, 96, 8),
+      action: {
+        type: "navigate",
+        targetPageId: "about",
+      },
+      animation: {
+        preset: "hand-cycle",
+        duration: 7,
+        delay: 0,
+        easing: "easeInOut",
+        trigger: "loop",
+      },
+      style: { objectFit: "contain" },
+    },
+    {
+      id: "tap-label",
+      type: "text",
+      name: "點一下",
+      content: "點一下",
+      desktop: layout(1115, 790, 100, 26, 9),
+      mobile: layout(262, 732, 74, 22, 9),
+      action: {
+        type: "navigate",
+        targetPageId: "about",
+      },
+      animation: {
+        preset: "blink",
+        duration: 3.8,
+        delay: 0,
+        easing: "easeInOut",
+        trigger: "loop",
+      },
+      style: {
+        color: "#efe5d4",
+        fontSize: 13,
+        fontWeight: 700,
+        textAlign: "center",
+      },
+    },
+    {
+      id: "tap-play",
+      type: "text",
+      name: "TAP TO PLAY",
+      content: "TAP TO PLAY",
+      desktop: layout(1110, 824, 110, 20, 9),
+      mobile: layout(252, 760, 94, 18, 9),
+      action: {
+        type: "navigate",
+        targetPageId: "about",
+      },
+      animation: {
+        preset: "blink",
+        duration: 4.6,
+        delay: 0.5,
+        easing: "easeInOut",
+        trigger: "loop",
+      },
+      style: {
+        color: "#b9ad9a",
+        fontSize: 9,
+        fontWeight: 800,
+        letterSpacing: 1,
+        textAlign: "center",
       },
     },
   ];
