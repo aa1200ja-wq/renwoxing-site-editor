@@ -36,3 +36,58 @@ button { cursor: pointer; }
 .visible-toggle { display: flex; gap: 8px; align-items: center; margin: 18px 0; font-size: 13px; }
 .content-field textarea { resize: vertical; min-height: 100px; }
 .editor-canvas .site-element > * { pointer-events: none; }
+
+.sidebar-section {
+  margin-bottom: 22px;
+}
+
+.element-list {
+  max-height: 250px;
+  overflow-y: auto;
+  margin-bottom: 22px;
+  padding-right: 4px;
+}
+
+.element-list button {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  gap: 7px;
+  align-items: center;
+}
+
+.element-order {
+  color: #9c793e;
+  font-size: 10px;
+}
+
+.element-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.element-list small {
+  color: #8a7b66;
+  font-size: 9px;
+}
+
+.add-element-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+
+.add-element-grid button {
+  margin: 0;
+  padding: 9px 8px;
+  font-size: 12px;
+}
+
+.delete-element {
+  width: 100%;
+  margin-top: 22px;
+  border: 1px solid #9c4c3c;
+  background: transparent;
+  color: #8d3024;
+  padding: 10px 12px;
+}
