@@ -7,10 +7,14 @@ type Props = {
   viewport: ViewportMode;
   onLayoutChange: (patch: Partial<ElementLayout>) => void;
   onContentChange: (content: string) => void;
+  onDelete: () => void;
 };
 
 const numericFields: Array<{
-  key: keyof Pick<ElementLayout, "x" | "y" | "width" | "height" | "rotation" | "zIndex">;
+  key: keyof Pick<
+    ElementLayout,
+    "x" | "y" | "width" | "height" | "rotation" | "zIndex"
+  >;
   label: string;
 }> = [
   { key: "x", label: "X" },
@@ -21,30 +25,46 @@ const numericFields: Array<{
   { key: "zIndex", label: "圖層" },
 ];
 
+function contentLabel(element: SiteElement) {
+  if (element.type === "image") return "圖片網址";
+  if (element.type === "youtube") return "YouTube Embed 網址";
+  return "文字內容";
+}
+
 export function InspectorPanel({
   element,
   viewport,
   onLayoutChange,
   onContentChange,
+  onDelete,
 }: Props) {
   if (!element) {
     return (
       <aside className="editor-inspector">
         <p className="panel-title">元素屬性</p>
         <p>尚未選取元素</p>
-        <span className="muted">點畫布上的元素即可調整。</span>
+        <span className="muted">
+          點畫布或左側「所有元素」即可選取。
+        </span>
       </aside>
     );
   }
 
   const activeLayout = element[viewport];
-  const editableContent = element.type === "text" || element.type === "button";
+  const editableContent = [
+    "text",
+    "button",
+    "image",
+    "youtube",
+  ].includes(element.type);
 
   return (
     <aside className="editor-inspector">
       <p className="panel-title">元素屬性</p>
       <strong>{element.name}</strong>
-      <span className="muted">{viewport === "desktop" ? "桌機版" : "手機版"}</span>
+      <span className="muted">
+        {viewport === "desktop" ? "桌機版" : "手機版"}
+      </span>
 
       <div className="inspector-grid">
         {numericFields.map(({ key, label }) => (
@@ -54,7 +74,9 @@ export function InspectorPanel({
               type="number"
               value={activeLayout[key]}
               onChange={(event) =>
-                onLayoutChange({ [key]: Number(event.target.value) })
+                onLayoutChange({
+                  [key]: Number(event.target.value),
+                })
               }
             />
           </label>
@@ -65,21 +87,36 @@ export function InspectorPanel({
         <input
           type="checkbox"
           checked={activeLayout.visible}
-          onChange={(event) => onLayoutChange({ visible: event.target.checked })}
+          onChange={(event) =>
+            onLayoutChange({ visible: event.target.checked })
+          }
         />
         <span>顯示此元素</span>
       </label>
 
       {editableContent && (
         <label className="content-field">
-          <span>文字內容</span>
+          <span>{contentLabel(element)}</span>
           <textarea
             value={element.content}
-            onChange={(event) => onContentChange(event.target.value)}
+            onChange={(event) =>
+              onContentChange(event.target.value)
+            }
             rows={5}
           />
         </label>
       )}
+
+      <button
+        type="button"
+        className="delete-element"
+        onClick={onDelete}
+      >
+        刪除元素
+      </button>
+      <span className="muted">
+        步驟5尚未儲存前，重新整理頁面可還原。
+      </span>
     </aside>
   );
 }
