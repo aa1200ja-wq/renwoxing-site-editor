@@ -1,8 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { ElementLayout, SiteProject, ViewportMode } from "./model";
+import { createElement, type AddableElementType } from "./element-factory";
+import { EditorSidebar } from "./EditorSidebar";
 import { InspectorPanel } from "./InspectorPanel";
+import type {
+  ElementLayout,
+  SiteProject,
+  ViewportMode,
+} from "./model";
 import { SelectionOverlay } from "./SelectionOverlay";
 import { SiteRenderer } from "./SiteRenderer";
 
@@ -24,35 +30,80 @@ export function EditorShell({ initialProject }: { initialProject: SiteProject })
 
   function patchSelectedLayout(patch: Partial<ElementLayout>) {
     if (!selectedId) return;
+
     setProject((current) => ({
       ...current,
       pages: current.pages.map((item) =>
-        item.id !== page.id ? item : {
-          ...item,
-          elements: item.elements.map((element) =>
-            element.id !== selectedId ? element : {
-              ...element,
-              [viewport]: { ...element[viewport], ...patch },
+        item.id !== page.id
+          ? item
+          : {
+              ...item,
+              elements: item.elements.map((element) =>
+                element.id !== selectedId
+                  ? element
+                  : {
+                      ...element,
+                      [viewport]: {
+                        ...element[viewport],
+                        ...patch,
+                      },
+                    },
+              ),
             },
-          ),
-        },
       ),
     }));
   }
 
   function patchSelectedContent(content: string) {
     if (!selectedId) return;
+
     setProject((current) => ({
       ...current,
       pages: current.pages.map((item) =>
-        item.id !== page.id ? item : {
-          ...item,
-          elements: item.elements.map((element) =>
-            element.id === selectedId ? { ...element, content } : element,
-          ),
-        },
+        item.id !== page.id
+          ? item
+          : {
+              ...item,
+              elements: item.elements.map((element) =>
+                element.id === selectedId
+                  ? { ...element, content }
+                  : element,
+              ),
+            },
       ),
     }));
+  }
+
+  function addElement(type: AddableElementType) {
+    const element = createElement(type, page);
+    setProject((current) => ({
+      ...current,
+      pages: current.pages.map((item) =>
+        item.id === page.id
+          ? { ...item, elements: [...item.elements, element] }
+          : item,
+      ),
+    }));
+    setSelectedId(element.id);
+  }
+
+  function deleteSelectedElement() {
+    if (!selectedId) return;
+
+    setProject((current) => ({
+      ...current,
+      pages: current.pages.map((item) =>
+        item.id === page.id
+          ? {
+              ...item,
+              elements: item.elements.filter(
+                (element) => element.id !== selectedId,
+              ),
+            }
+          : item,
+      ),
+    }));
+    setSelectedId(null);
   }
 
   return (
@@ -62,13 +113,19 @@ export function EditorShell({ initialProject }: { initialProject: SiteProject })
         <div>
           <button
             className={viewport === "desktop" ? "active" : ""}
-            onClick={() => { setViewport("desktop"); setSelectedId(null); }}
+            onClick={() => {
+              setViewport("desktop");
+              setSelectedId(null);
+            }}
           >
             桌機
           </button>
           <button
             className={viewport === "mobile" ? "active" : ""}
-            onClick={() => { setViewport("mobile"); setSelectedId(null); }}
+            onClick={() => {
+              setViewport("mobile");
+              setSelectedId(null);
+            }}
           >
             手機
           </button>
@@ -76,23 +133,17 @@ export function EditorShell({ initialProject }: { initialProject: SiteProject })
         </div>
       </header>
 
-      <aside className="editor-sidebar">
-        <p className="panel-title">頁面</p>
-        {project.pages.map((item) => (
-          <button
-            key={item.id}
-            className={item.id === page.id ? "active" : ""}
-            onClick={() => {
-              setPageId(item.id);
-              setSelectedId(null);
-            }}
-          >
-            {item.name}
-          </button>
-        ))}
-        <p className="panel-title">新增元素</p>
-        <span className="muted">文字 / 圖片 / YouTube / 按鈕 / 線條</span>
-      </aside>
+      <EditorSidebar
+        project={project}
+        page={page}
+        selectedId={selectedId}
+        onPageChange={(nextPageId) => {
+          setPageId(nextPageId);
+          setSelectedId(null);
+        }}
+        onElementSelect={setSelectedId}
+        onAddElement={addElement}
+      />
 
       <main className="editor-canvas">
         <SiteRenderer
@@ -114,6 +165,7 @@ export function EditorShell({ initialProject }: { initialProject: SiteProject })
         viewport={viewport}
         onLayoutChange={patchSelectedLayout}
         onContentChange={patchSelectedContent}
+        onDelete={deleteSelectedElement}
       />
     </div>
   );
