@@ -3,7 +3,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import type { SectionId } from "./scene-data";
 import { sections } from "./scene-data";
-import { VinylStage } from "./VinylStage";\nimport { SectionContent } from "./SectionContent";
+import { VinylStage } from "./VinylStage";
+import { SectionContent } from "./SectionContent";
 
 type Props = {
   active: SectionId;
