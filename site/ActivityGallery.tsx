@@ -15,12 +15,12 @@ const activities: Activity[] = [
   { label: "MEMORY", image: "/assets/renwoxing/activity-03.webp" },
 ];
 
-export function ActivityGallery({ embedded = false }: { embedded?: boolean }) {
+export function ActivityGallery() {
   const [selected, setSelected] = useState<Activity | null>(null);
 
   return (
     <>
-      <div className={embedded ? "event-grid embedded" : "event-grid"}>
+      <div className="event-grid">
         {activities.map((activity, index) => (
           <motion.button
             type="button"
