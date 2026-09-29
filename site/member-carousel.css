@@ -89,8 +89,10 @@
 
 .member-modal {
   position: relative;
-  width: min(72vw, 620px);
-  padding: 24px;
+  width: min(82vw, 460px);
+  max-height: 92vh;
+  padding: 18px;
+  overflow: auto;
   background: #efe3ca;
   color: #17130e;
   box-shadow: 0 28px 90px rgba(0, 0, 0, .45);
@@ -99,8 +101,8 @@
 .member-alt-photo {
   display: block;
   width: 100%;
-  height: min(52vh, 440px);
-  object-fit: cover;
+  aspect-ratio: 3 / 4;
+  object-fit: contain;
   object-position: center;
   background: #19140e;
 }
@@ -157,10 +159,11 @@
 
   .member-modal {
     width: calc(100vw - 32px);
-    padding: 16px;
+    max-height: 92svh;
+    padding: 14px;
   }
 
   .member-alt-photo {
-    height: 46vh;
+    aspect-ratio: 3 / 4;
   }
 }
