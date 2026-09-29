@@ -36,6 +36,9 @@ export function ElementView({
     boxSizing: "border-box",
     cursor: !editable && element.action ? "pointer" : undefined,
     ...element.style,
+    ...(viewport === "desktop"
+      ? element.desktopStyle
+      : element.mobileStyle),
   };
 
   return (
@@ -55,12 +58,18 @@ export function ElementView({
       }}
       {...motionProps(element.animation)}
     >
-      <ElementContent element={element} />
+      <ElementContent element={element} viewport={viewport} />
     </motion.div>
   );
 }
 
-function ElementContent({ element }: { element: SiteElement }) {
+function ElementContent({
+  element,
+  viewport,
+}: {
+  element: SiteElement;
+  viewport: ViewportMode;
+}) {
   if (element.type === "image") {
     return (
       <img
@@ -90,7 +99,13 @@ function ElementContent({ element }: { element: SiteElement }) {
   }
 
   if (element.type === "component") {
-    return <SpecialElement name={element.content} />;
+    return (
+      <SpecialElement
+        name={element.content}
+        viewport={viewport}
+        settings={element.settings?.[viewport]}
+      />
+    );
   }
 
   return <div className="text-element">{element.content}</div>;
