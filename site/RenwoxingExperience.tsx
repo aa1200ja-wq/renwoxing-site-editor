@@ -30,10 +30,7 @@ function useViewportMode() {
   return viewport;
 }
 
-function useFitScale(
-  width: number,
-  height: number,
-) {
+function useFitScale(width: number, height: number) {
   const [scale, setScale] = useState(1);
 
   useEffect(() => {
@@ -56,22 +53,16 @@ function useFitScale(
 
 const pageTransition = {
   initial: {
-    opacity: 0.25,
-    x: -110,
-    rotateY: -16,
-    clipPath: "inset(0 100% 0 0)",
+    opacity: 0.96,
+    x: -180,
   },
   animate: {
     opacity: 1,
     x: 0,
-    rotateY: 0,
-    clipPath: "inset(0 0% 0 0)",
   },
   exit: {
-    opacity: 0.45,
-    x: 55,
-    rotateY: 8,
-    clipPath: "inset(0 0 0 22%)",
+    opacity: 0,
+    x: 36,
   },
 };
 
@@ -106,11 +97,11 @@ export function RenwoxingExperience() {
   }
 
   return (
-    <main className="public-site-shell book-perspective">
-      <AnimatePresence initial={false} mode="sync">
+    <main className="public-site-shell">
+      <AnimatePresence mode="wait">
         <motion.div
           key={page.id}
-          className="public-stage-frame book-page-turn"
+          className="public-stage-frame"
           style={{
             width: size.width * scale,
             height: size.height * scale,
@@ -119,7 +110,7 @@ export function RenwoxingExperience() {
           animate={pageTransition.animate}
           exit={pageTransition.exit}
           transition={{
-            duration: 0.82,
+            duration: 0.6,
             ease: [0.22, 1, 0.36, 1],
           }}
         >
@@ -130,13 +121,6 @@ export function RenwoxingExperience() {
             transformOrigin="top left"
             className="public-site-stage"
             onAction={handleAction}
-          />
-          <motion.span
-            className="book-page-shadow"
-            initial={{ opacity: 0.5 }}
-            animate={{ opacity: 0 }}
-            transition={{ duration: 0.75 }}
-            aria-hidden="true"
           />
         </motion.div>
       </AnimatePresence>
