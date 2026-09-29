@@ -1,6 +1,10 @@
 "use client";
 
-import type { SitePage, ViewportMode } from "./model";
+import type {
+  SiteElement,
+  SitePage,
+  ViewportMode,
+} from "./model";
 import { ElementView } from "./ElementView";
 
 type Props = {
@@ -9,20 +13,37 @@ type Props = {
   editable?: boolean;
   selectedId?: string | null;
   onSelect?: (id: string | null) => void;
+  onAction?: (element: SiteElement) => void;
+  scale?: number;
+  transformOrigin?: string;
+  className?: string;
 };
 
-export function SiteRenderer({ page, viewport, editable = false, selectedId, onSelect }: Props) {
+export function SiteRenderer({
+  page,
+  viewport,
+  editable = false,
+  selectedId,
+  onSelect,
+  onAction,
+  scale,
+  transformOrigin = "center center",
+  className = "",
+}: Props) {
   const size = page.viewport[viewport];
-  const scale = viewport === "mobile" ? 0.84 : 0.72;
+  const resolvedScale =
+    scale ?? (viewport === "mobile" ? 0.84 : 0.72);
+
   return (
     <div
-      className="site-stage"
+      className={`site-stage ${className}`.trim()}
       style={{
         width: size.width,
         height: size.height,
         background: page.background,
         overflow: page.overflow,
-        transform: "scale(" + scale + ")",
+        transform: "scale(" + resolvedScale + ")",
+        transformOrigin,
       }}
       onMouseDown={() => editable && onSelect?.(null)}
     >
@@ -34,6 +55,7 @@ export function SiteRenderer({ page, viewport, editable = false, selectedId, onS
           editable={editable}
           selected={selectedId === element.id}
           onSelect={onSelect ?? undefined}
+          onAction={onAction}
         />
       ))}
     </div>
