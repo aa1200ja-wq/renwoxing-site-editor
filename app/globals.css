@@ -28,3 +28,11 @@ button { cursor: pointer; }
 .preview-shell { height: 100vh; display: grid; grid-template-rows: 54px 1fr; }
 .preview-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 0 16px; background: #0d0d0d; }
 @media (max-width: 900px) { .editor-shell { grid-template-columns: 170px 1fr; } .editor-inspector { display: none; } }
+
+.editor-topbar button.active { border-color: #d8b56a; color: #d8b56a; }
+.inspector-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
+.inspector-grid label, .content-field { display: grid; gap: 5px; font-size: 12px; color: #6e5f49; }
+.inspector-grid input, .content-field textarea { width: 100%; border: 1px solid #c4b79e; background: #fffaf0; color: #17130d; padding: 8px; }
+.visible-toggle { display: flex; gap: 8px; align-items: center; margin: 18px 0; font-size: 13px; }
+.content-field textarea { resize: vertical; min-height: 100px; }
+.editor-canvas .site-element > * { pointer-events: none; }
