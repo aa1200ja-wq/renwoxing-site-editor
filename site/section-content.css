@@ -192,3 +192,15 @@
     display: none;
   }
 }
+
+.event-grid.embedded {
+  position: relative;
+  right: auto;
+  bottom: auto;
+  width: 100%;
+  height: 100%;
+}
+
+.event-grid.embedded .event-tile {
+  min-height: 100%;
+}
