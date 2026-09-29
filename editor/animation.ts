@@ -1,11 +1,12 @@
+import type { MotionProps } from "framer-motion";
 import type { AnimationSpec } from "./model";
 
-export function motionProps(animation?: AnimationSpec) {
+export function motionProps(animation?: AnimationSpec): MotionProps {
   if (!animation || animation.preset === "none") return {};
-  const transition = {
+  const transition: MotionProps["transition"] = {
     duration: animation.duration,
     delay: animation.delay,
-    ease: animation.easing,
+    ease: normalizeEase(animation.easing),
     repeat: animation.trigger === "loop" ? Infinity : 0,
   };
   if (animation.trigger === "hover") {
@@ -18,6 +19,13 @@ export function motionProps(animation?: AnimationSpec) {
   };
 }
 
+function normalizeEase(value: string) {
+  if (value === "linear") return "linear" as const;
+  if (value === "easeIn") return "easeIn" as const;
+  if (value === "easeInOut") return "easeInOut" as const;
+  return "easeOut" as const;
+}
+
 function presetTarget(preset: AnimationSpec["preset"]) {
   switch (preset) {
     case "fade":
@@ -25,12 +33,9 @@ function presetTarget(preset: AnimationSpec["preset"]) {
     case "slide-left":
     case "slide-right":
       return { opacity: 1, x: 0, y: 0 };
-    case "scale":
-      return { opacity: 1, scale: 1 };
-    case "spin":
-      return { rotate: 360 };
-    default:
-      return {};
+    case "scale": return { opacity: 1, scale: 1 };
+    case "spin": return { rotate: 360 };
+    default: return {};
   }
 }
 
