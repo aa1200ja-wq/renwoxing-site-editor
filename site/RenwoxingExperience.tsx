@@ -52,18 +52,9 @@ function useFitScale(width: number, height: number) {
 }
 
 const pageTransition = {
-  initial: {
-    opacity: 0.96,
-    x: -180,
-  },
-  animate: {
-    opacity: 1,
-    x: 0,
-  },
-  exit: {
-    opacity: 0,
-    x: 36,
-  },
+  initial: { x: "-100%", opacity: 1 },
+  animate: { x: "0%", opacity: 1 },
+  exit: { x: "18%", opacity: 0 },
 };
 
 export function RenwoxingExperience() {
@@ -82,6 +73,8 @@ export function RenwoxingExperience() {
 
   const size = page.viewport[viewport];
   const scale = useFitScale(size.width, size.height);
+  const frameWidth = size.width * scale;
+  const frameHeight = size.height * scale;
 
   function handleAction(element: SiteElement) {
     if (!element.action) return;
@@ -98,32 +91,36 @@ export function RenwoxingExperience() {
 
   return (
     <main className="public-site-shell">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={page.id}
-          className="public-stage-frame"
-          style={{
-            width: size.width * scale,
-            height: size.height * scale,
-          }}
-          initial={pageTransition.initial}
-          animate={pageTransition.animate}
-          exit={pageTransition.exit}
-          transition={{
-            duration: 0.6,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-        >
-          <SiteRenderer
-            page={page}
-            viewport={viewport}
-            scale={scale}
-            transformOrigin="top left"
-            className="public-site-stage"
-            onAction={handleAction}
-          />
-        </motion.div>
-      </AnimatePresence>
+      <div
+        className="public-stage-slot"
+        style={{
+          width: frameWidth,
+          height: frameHeight,
+        }}
+      >
+        <AnimatePresence initial mode="sync">
+          <motion.div
+            key={page.id}
+            className="public-stage-frame"
+            initial={pageTransition.initial}
+            animate={pageTransition.animate}
+            exit={pageTransition.exit}
+            transition={{
+              duration: 0.72,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+          >
+            <SiteRenderer
+              page={page}
+              viewport={viewport}
+              scale={scale}
+              transformOrigin="top left"
+              className="public-site-stage"
+              onAction={handleAction}
+            />
+          </motion.div>
+        </AnimatePresence>
+      </div>
 
       <ImageLightbox
         src={lightboxSrc}
