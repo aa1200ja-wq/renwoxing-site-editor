@@ -2,9 +2,9 @@
 
 import { motion } from "framer-motion";
 
-const vinylUrl = "https://at.adobe.com/3NErmny4FBbRuQVs";
-const labelUrl = "https://at.adobe.com/AOMAGP6BeJpm2mWt";
-const saxUrl = "https://at.adobe.com/5A0ozpiYI4J3NTFA";
+const vinylUrl = "/assets/renwoxing/vinyl-disc.webp";
+const labelUrl = "/assets/renwoxing/label-gold.webp";
+const saxUrl = "/assets/renwoxing/saxophone.webp";
 
 type Props = {
   compact: boolean;
