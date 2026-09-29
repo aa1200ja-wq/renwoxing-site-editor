@@ -1,3 +1,34 @@
+.tap-cue {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  color: #efe5d4;
+  font-family: Arial, sans-serif;
+}
+
+.tap-cue img {
+  width: 120px;
+  height: 150px;
+  object-fit: contain;
+  margin-bottom: -38px;
+}
+
+.tap-cue strong {
+  font-size: 13px;
+}
+
+.tap-cue span {
+  font-size: 10px;
+  opacity: .82;
+}
+
+.tap-cue small {
+  margin-top: 12px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+
 .tap-hand-cycle {
   opacity: 0;
   animation: tapHandCycle 7s ease-in-out infinite;
