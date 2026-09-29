@@ -74,6 +74,34 @@ export function EditorShell({ initialProject }: { initialProject: SiteProject })
     }));
   }
 
+  function patchSelectedStyle(
+    patch: Record<string, string | number>,
+  ) {
+    if (!selectedId) return;
+
+    setProject((current) => ({
+      ...current,
+      pages: current.pages.map((item) =>
+        item.id !== page.id
+          ? item
+          : {
+              ...item,
+              elements: item.elements.map((element) =>
+                element.id === selectedId
+                  ? {
+                      ...element,
+                      style: {
+                        ...element.style,
+                        ...patch,
+                      },
+                    }
+                  : element,
+              ),
+            },
+      ),
+    }));
+  }
+
   function addElement(type: AddableElementType) {
     const element = createElement(type, page);
     setProject((current) => ({
@@ -165,6 +193,7 @@ export function EditorShell({ initialProject }: { initialProject: SiteProject })
         viewport={viewport}
         onLayoutChange={patchSelectedLayout}
         onContentChange={patchSelectedContent}
+        onStyleChange={patchSelectedStyle}
         onDelete={deleteSelectedElement}
       />
     </div>
