@@ -1,5 +1,10 @@
 import type { SiteElement, SitePage, SiteProject } from "./model";
 import { sections } from "@/site/scene-data";
+import {
+  makeEventElements,
+  makeHomeExtraElements,
+  makeNavElements,
+} from "./renwoxing-page-elements";
 
 const heroBackground = "https://at.adobe.com/ubJdGzxDCypT1UMG";
 const bookBackground = "/assets/renwoxing/album-spread.webp";
@@ -32,15 +37,6 @@ function sharedInnerElements(): SiteElement[] {
       mobile: layout(-115, 70, 300, 300, 2),
     },
     {
-      id: "section-nav",
-      type: "text",
-      name: "上方導覽",
-      content: "認識任我行　 活動精選　 人物　 演出邀約　 影片欣賞　 聯絡我們",
-      desktop: layout(570, 62, 760, 42, 5),
-      mobile: layout(18, 338, 354, 62, 5),
-      style: { color: "#3d3022", fontSize: 16, fontWeight: 700 },
-    },
-    {
       id: "back-home",
       type: "button",
       name: "回到唱片",
@@ -52,27 +48,22 @@ function sharedInnerElements(): SiteElement[] {
   ];
 }
 
-function sectionVisual(index: number): SiteElement {
+function sectionVisuals(index: number): SiteElement[] {
   const id = sections[index].id;
+
   if (id === "events") {
-    return {
-      id: "section-visual",
-      type: "component",
-      name: "活動照片",
-      content: "activities",
-      desktop: layout(820, 610, 540, 230, 5),
-      mobile: layout(24, 650, 342, 160, 5),
-    };
+    return makeEventElements(layout);
   }
+
   if (id === "members") {
-    return {
+    return [{
       id: "section-visual",
       type: "component",
       name: "人物輪播",
       content: "members",
       desktop: layout(760, 600, 640, 250, 5),
       mobile: layout(20, 635, 350, 180, 5),
-    };
+    }];
   }
 
   const content = id === "about"
@@ -83,7 +74,7 @@ function sectionVisual(index: number): SiteElement {
         ? "▶"
         : "01 演出邀約\n02 活動合作\n03 社團交流";
 
-  return {
+  return [{
     id: "section-visual",
     type: id === "video" ? "button" : "text",
     name: "章節視覺",
@@ -96,7 +87,7 @@ function sectionVisual(index: number): SiteElement {
       lineHeight: 1.2,
       fontWeight: 500,
     },
-  };
+  }];
 }
 
 function makeInnerPage(index: number): SitePage {
@@ -112,6 +103,7 @@ function makeInnerPage(index: number): SitePage {
     background: "#080706",
     elements: [
       ...sharedInnerElements(),
+      ...makeNavElements(layout),
       {
         id: "eyebrow",
         type: "text",
@@ -148,7 +140,7 @@ function makeInnerPage(index: number): SitePage {
         mobile: layout(270, 410, 90, 70, 4),
         style: { color: "rgba(132,91,37,.13)", fontSize: 100 },
       },
-      sectionVisual(index),
+      ...sectionVisuals(index),
     ],
   };
 }
@@ -163,6 +155,7 @@ const home: SitePage = {
   overflow: "hidden",
   background: "#070706",
   elements: [
+    ...makeHomeExtraElements(layout),
     {
       id: "hero-background",
       type: "image",
