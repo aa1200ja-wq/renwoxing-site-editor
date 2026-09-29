@@ -181,3 +181,6 @@ button { cursor: pointer; }
 .moveable-line.moveable-dashed {
   background: #39a7ff !important;
 }
+
+.save-status { color: #b7aa91; font-size: 12px; min-width: 82px; text-align: right; }
+.editor-topbar button:disabled { opacity: .45; cursor: wait; }

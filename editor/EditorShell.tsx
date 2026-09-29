@@ -1,14 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createElement, type AddableElementType } from "./element-factory";
 import { EditorSidebar } from "./EditorSidebar";
 import { InspectorPanel } from "./InspectorPanel";
-import type {
-  ElementLayout,
-  SiteProject,
-  ViewportMode,
-} from "./model";
+import type { ElementLayout, SiteProject, ViewportMode } from "./model";
+import { loadDraft, persistProject } from "./project-storage";
 import { SelectionOverlay } from "./SelectionOverlay";
 import { SiteRenderer } from "./SiteRenderer";
 
@@ -17,6 +14,17 @@ export function EditorShell({ initialProject }: { initialProject: SiteProject })
   const [pageId, setPageId] = useState(initialProject.pages[0].id);
   const [viewport, setViewport] = useState<ViewportMode>("desktop");
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [saveState, setSaveState] = useState("尚未儲存");
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    loadDraft().then((draft) => {
+      if (!draft) return;
+      setProject(draft);
+      setPageId(draft.pages[0].id);
+      setSaveState("已載入草稿");
+    });
+  }, []);
 
   const page = useMemo(
     () => project.pages.find((item) => item.id === pageId) ?? project.pages[0],
@@ -28,143 +36,100 @@ export function EditorShell({ initialProject }: { initialProject: SiteProject })
     [page.elements, selectedId],
   );
 
-  function patchSelectedLayout(patch: Partial<ElementLayout>) {
-    if (!selectedId) return;
-
+  function updateCurrentPage(
+    updater: (elements: typeof page.elements) => typeof page.elements,
+  ) {
     setProject((current) => ({
       ...current,
       pages: current.pages.map((item) =>
-        item.id !== page.id
-          ? item
-          : {
-              ...item,
-              elements: item.elements.map((element) =>
-                element.id !== selectedId
-                  ? element
-                  : {
-                      ...element,
-                      [viewport]: {
-                        ...element[viewport],
-                        ...patch,
-                      },
-                    },
-              ),
-            },
+        item.id === page.id ? { ...item, elements: updater(item.elements) } : item,
       ),
     }));
+  }
+
+  function patchSelectedLayout(patch: Partial<ElementLayout>) {
+    if (!selectedId) return;
+    updateCurrentPage((elements) =>
+      elements.map((element) =>
+        element.id === selectedId
+          ? { ...element, [viewport]: { ...element[viewport], ...patch } }
+          : element,
+      ),
+    );
   }
 
   function patchSelectedContent(content: string) {
     if (!selectedId) return;
-
-    setProject((current) => ({
-      ...current,
-      pages: current.pages.map((item) =>
-        item.id !== page.id
-          ? item
-          : {
-              ...item,
-              elements: item.elements.map((element) =>
-                element.id === selectedId
-                  ? { ...element, content }
-                  : element,
-              ),
-            },
+    updateCurrentPage((elements) =>
+      elements.map((element) =>
+        element.id === selectedId ? { ...element, content } : element,
       ),
-    }));
+    );
   }
 
-  function patchSelectedStyle(
-    patch: Record<string, string | number>,
-  ) {
+  function patchSelectedStyle(patch: Record<string, string | number>) {
     if (!selectedId) return;
-    const styleKey =
-      viewport === "desktop" ? "desktopStyle" : "mobileStyle";
-
-    setProject((current) => ({
-      ...current,
-      pages: current.pages.map((item) =>
-        item.id !== page.id
-          ? item
-          : {
-              ...item,
-              elements: item.elements.map((element) =>
-                element.id === selectedId
-                  ? {
-                      ...element,
-                      [styleKey]: {
-                        ...element[styleKey],
-                        ...patch,
-                      },
-                    }
-                  : element,
-              ),
-            },
+    const styleKey = viewport === "desktop" ? "desktopStyle" : "mobileStyle";
+    updateCurrentPage((elements) =>
+      elements.map((element) =>
+        element.id === selectedId
+          ? { ...element, [styleKey]: { ...element[styleKey], ...patch } }
+          : element,
       ),
-    }));
+    );
   }
 
   function patchSelectedSetting(
     patch: Record<string, string | number | boolean>,
   ) {
     if (!selectedId) return;
-
-    setProject((current) => ({
-      ...current,
-      pages: current.pages.map((item) =>
-        item.id !== page.id
-          ? item
-          : {
-              ...item,
-              elements: item.elements.map((element) =>
-                element.id === selectedId
-                  ? {
-                      ...element,
-                      settings: {
-                        ...element.settings,
-                        [viewport]: {
-                          ...element.settings?.[viewport],
-                          ...patch,
-                        },
-                      },
-                    }
-                  : element,
-              ),
-            },
+    updateCurrentPage((elements) =>
+      elements.map((element) =>
+        element.id === selectedId
+          ? {
+              ...element,
+              settings: {
+                ...element.settings,
+                [viewport]: {
+                  ...element.settings?.[viewport],
+                  ...patch,
+                },
+              },
+            }
+          : element,
       ),
-    }));
+    );
   }
 
   function addElement(type: AddableElementType) {
     const element = createElement(type, page);
-    setProject((current) => ({
-      ...current,
-      pages: current.pages.map((item) =>
-        item.id === page.id
-          ? { ...item, elements: [...item.elements, element] }
-          : item,
-      ),
-    }));
+    updateCurrentPage((elements) => [...elements, element]);
     setSelectedId(element.id);
   }
 
   function deleteSelectedElement() {
     if (!selectedId) return;
-
-    setProject((current) => ({
-      ...current,
-      pages: current.pages.map((item) =>
-        item.id === page.id
-          ? {
-              ...item,
-              elements: item.elements.filter(
-                (element) => element.id !== selectedId,
-              ),
-            }
-          : item,
-      ),
-    }));
+    updateCurrentPage((elements) =>
+      elements.filter((element) => element.id !== selectedId),
+    );
     setSelectedId(null);
+  }
+
+  async function save(action: "save" | "publish") {
+    setSaving(true);
+    setSaveState(action === "publish" ? "發布中…" : "儲存中…");
+    try {
+      const result = await persistProject(project, action);
+      if (result.cancelled) {
+        setSaveState("已取消");
+      } else {
+        setSaveState(action === "publish" ? "已發布" : "草稿已儲存");
+      }
+    } catch (error) {
+      setSaveState(error instanceof Error ? error.message : "儲存失敗");
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -172,6 +137,13 @@ export function EditorShell({ initialProject }: { initialProject: SiteProject })
       <header className="editor-topbar">
         <strong>{project.name}</strong>
         <div>
+          <span className="save-status">{saveState}</span>
+          <button disabled={saving} onClick={() => save("save")}>
+            儲存草稿
+          </button>
+          <button disabled={saving} onClick={() => save("publish")}>
+            儲存並發布
+          </button>
           <button
             className={viewport === "desktop" ? "active" : ""}
             onClick={() => {

@@ -1,0 +1,62 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import type {
+  SiteElement,
+  SiteProject,
+  ViewportMode,
+} from "@/editor/model";
+import { SiteRenderer } from "@/editor/SiteRenderer";
+
+export function PublicProjectSite({ project }: { project: SiteProject }) {
+  const [pageId, setPageId] = useState(project.pages[0].id);
+  const [viewport, setViewport] = useState<ViewportMode>("desktop");
+  const [scale, setScale] = useState(1);
+
+  const page = useMemo(
+    () => project.pages.find((item) => item.id === pageId) ?? project.pages[0],
+    [pageId, project.pages],
+  );
+
+  useEffect(() => {
+    function syncViewport() {
+      const next: ViewportMode =
+        window.innerWidth <= 700 ? "mobile" : "desktop";
+      const size = page.viewport[next];
+      setViewport(next);
+      setScale(
+        Math.min(window.innerWidth / size.width, window.innerHeight / size.height),
+      );
+    }
+
+    syncViewport();
+    window.addEventListener("resize", syncViewport);
+    return () => window.removeEventListener("resize", syncViewport);
+  }, [page]);
+
+  function handleAction(element: SiteElement) {
+    if (element.action?.type === "navigate") {
+      setPageId(element.action.targetPageId);
+    }
+  }
+
+  const size = page.viewport[viewport];
+
+  return (
+    <main className="public-site-shell">
+      <div
+        className="public-stage-frame"
+        style={{ width: size.width * scale, height: size.height * scale }}
+      >
+        <SiteRenderer
+          page={page}
+          viewport={viewport}
+          scale={scale}
+          transformOrigin="top left"
+          className="public-site-stage"
+          onAction={handleAction}
+        />
+      </div>
+    </main>
+  );
+}

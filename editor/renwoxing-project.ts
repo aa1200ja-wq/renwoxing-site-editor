@@ -9,7 +9,7 @@ import {
   makeEventElements,
 } from "./renwoxing-section-elements";
 
-const heroBackground = "https://at.adobe.com/ubJdGzxDCypT1UMG";
+const heroBackground = "/assets/renwoxing/hero-surface.jpg";
 const bookBackground = "/assets/renwoxing/album-spread.webp";
 
 const layout = (
