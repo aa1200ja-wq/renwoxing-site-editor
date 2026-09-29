@@ -4,9 +4,9 @@ import "./tap-cue.css";
 
 const handUrl = "https://at.adobe.com/5PsW5E8IbnwQQyie";
 
-export function TapCue({ embedded = false }: { embedded?: boolean }) {
+export function TapCue() {
   return (
-    <div className={embedded ? "tap-cue embedded" : "tap-cue"} aria-hidden="true">
+    <div className="tap-cue" aria-hidden="true">
       <img className="tap-hand-cycle" src={handUrl} alt="" />
       <strong>點一下</strong>
       <span>進入專輯</span>
