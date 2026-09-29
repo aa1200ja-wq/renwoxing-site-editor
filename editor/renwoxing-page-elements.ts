@@ -31,6 +31,7 @@ export function makeNavElements(layout: LayoutFactory): SiteElement[] {
       24,
       6,
     ),
+    action: { type: "navigate", targetPageId: section.id },
     style: {
       color: "#3d3022",
       fontSize: 15,
@@ -75,6 +76,7 @@ export function makeHomeExtraElements(layout: LayoutFactory): SiteElement[] {
       content: "▶ 活動影片欣賞",
       desktop: layout(1080, 350, 190, 40, 7),
       mobile: layout(230, 70, 140, 32, 7),
+      action: { type: "navigate", targetPageId: "video" },
       style: {
         color: "#d29a3d",
         fontSize: 16,
