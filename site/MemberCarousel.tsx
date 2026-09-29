@@ -2,19 +2,8 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
+import { members, type Member } from "./member-data";
 import "./member-carousel.css";
-
-type Member = {
-  id: number;
-  name: string;
-  role: string;
-};
-
-const members: Member[] = Array.from({ length: 10 }, (_, index) => ({
-  id: index + 1,
-  name: index === 9 ? "指導老師" : `團員 ${String(index + 1).padStart(2, "0")}`,
-  role: index === 9 ? "指導老師" : "團員",
-}));
 
 export function MemberCarousel() {
   const [selected, setSelected] = useState<Member | null>(null);
@@ -31,9 +20,12 @@ export function MemberCarousel() {
               key={`${member.id}-${index}`}
               onClick={() => setSelected(member)}
             >
+              <img src={member.cover} alt={member.name} />
               <span>{String(member.id).padStart(2, "0")}</span>
-              <strong>{member.name}</strong>
-              <small>{member.role}</small>
+              <div className="member-card-copy">
+                <strong>{member.name}</strong>
+                <small>{member.role}</small>
+              </div>
             </button>
           ))}
         </div>
@@ -67,10 +59,7 @@ export function MemberCarousel() {
               >
                 ×
               </button>
-              <div className="member-alt-photo">
-                <span>PHOTO B</span>
-                <small>第二張照片待匯入</small>
-              </div>
+              <img className="member-alt-photo" src={selected.detail} alt={selected.name} />
               <p>{selected.role}</p>
               <h3>{selected.name}</h3>
             </motion.article>
