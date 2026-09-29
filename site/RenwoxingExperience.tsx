@@ -1,31 +1,110 @@
 "use client";
 
-import { AnimatePresence } from "framer-motion";
-import { useState } from "react";
-import { ContentScene } from "./ContentScene";
-import { HomeScene } from "./HomeScene";
-import type { SectionId } from "./scene-data";
-import "./renwoxing.css";
-import "./renwoxing-mobile.css";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useMemo, useState } from "react";
+import { renwoxingProject } from "@/editor/renwoxing-project";
+import { SiteRenderer } from "@/editor/SiteRenderer";
+import type {
+  SiteElement,
+  ViewportMode,
+} from "@/editor/model";
+
+function useViewportMode() {
+  const [viewport, setViewport] =
+    useState<ViewportMode>("desktop");
+
+  useEffect(() => {
+    const sync = () => {
+      setViewport(
+        window.innerWidth <= 760 ? "mobile" : "desktop",
+      );
+    };
+
+    sync();
+    window.addEventListener("resize", sync);
+    return () => window.removeEventListener("resize", sync);
+  }, []);
+
+  return viewport;
+}
+
+function useFitScale(
+  width: number,
+  height: number,
+) {
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    const sync = () => {
+      setScale(
+        Math.min(
+          window.innerWidth / width,
+          window.innerHeight / height,
+        ),
+      );
+    };
+
+    sync();
+    window.addEventListener("resize", sync);
+    return () => window.removeEventListener("resize", sync);
+  }, [height, width]);
+
+  return scale;
+}
 
 export function RenwoxingExperience() {
-  const [entered, setEntered] = useState(false);
-  const [section, setSection] = useState<SectionId>("about");
+  const [pageId, setPageId] = useState("home");
+  const viewport = useViewportMode();
+
+  const page = useMemo(
+    () =>
+      renwoxingProject.pages.find(
+        (item) => item.id === pageId,
+      ) ?? renwoxingProject.pages[0],
+    [pageId],
+  );
+
+  const size = page.viewport[viewport];
+  const scale = useFitScale(size.width, size.height);
+
+  function handleAction(element: SiteElement) {
+    if (element.action?.type !== "navigate") return;
+    setPageId(element.action.targetPageId);
+  }
 
   return (
-    <main className="renwoxing-experience">
-      <div className="surface-texture" aria-hidden="true" />
+    <main className="public-site-shell">
       <AnimatePresence mode="wait">
-        {!entered ? (
-          <HomeScene key="home" onEnter={() => setEntered(true)} />
-        ) : (
-          <ContentScene
-            key="content"
-            active={section}
-            onChange={setSection}
-            onHome={() => setEntered(false)}
+        <motion.div
+          key={page.id}
+          className="public-stage-frame"
+          style={{
+            width: size.width * scale,
+            height: size.height * scale,
+          }}
+          initial={{
+            opacity: 0,
+            x: page.id === "home" ? -18 : 36,
+          }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{
+            opacity: 0,
+            x: page.id === "home" ? -18 : 36,
+          }}
+          transition={{
+            duration: 0.55,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+        >
+          <SiteRenderer
+            page={page}
+            viewport={viewport}
+            scale={scale}
+            transformOrigin="top left"
+            className="public-site-stage"
+            onAction={handleAction}
           />
-        )}
+        </motion.div>
       </AnimatePresence>
     </main>
   );
