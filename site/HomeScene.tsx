@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { VinylStage } from "./VinylStage";
+import { VinylRecord } from "./VinylRecord";
 import { TapCue } from "./TapCue";
 
 
@@ -27,7 +27,7 @@ export function HomeScene({ onEnter }: { onEnter: () => void }) {
       </motion.h1>
 
       <div className="hero-vinyl-wrap">
-        <VinylStage compact={false} onActivate={onEnter} />
+        <VinylRecord variant="hero" onActivate={onEnter} />
       </div>
 
       <div className="hero-copy">
