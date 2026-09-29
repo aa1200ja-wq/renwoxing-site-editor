@@ -1,6 +1,11 @@
 export type ViewportMode = "desktop" | "mobile";
 export type ElementType = "text" | "image" | "youtube" | "button" | "line";
 
+export type ViewportSize = {
+  width: number;
+  height: number;
+};
+
 export type ElementLayout = {
   x: number;
   y: number;
@@ -36,8 +41,7 @@ export type SiteElement = {
 export type SitePage = {
   id: string;
   name: string;
-  width: number;
-  height: number;
+  viewport: Record<ViewportMode, ViewportSize>;
   overflow: "hidden" | "visible";
   background: string;
   elements: SiteElement[];
