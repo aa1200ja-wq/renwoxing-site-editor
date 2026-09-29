@@ -29,6 +29,13 @@ function sharedInnerElements(): SiteElement[] {
       content: bookBackground,
       desktop: layout(520, 0, 1080, 900, 1),
       mobile: layout(0, 310, 390, 534, 1),
+      animation: {
+        preset: "fade",
+        duration: 0.8,
+        delay: 0,
+        easing: "easeOut",
+        trigger: "page-enter",
+      },
       style: { objectFit: "cover" },
     },
     {
@@ -181,6 +188,13 @@ const home: SitePage = {
       content: "任\n我\n行",
       desktop: layout(235, 250, 120, 340, 5),
       mobile: layout(28, 105, 78, 260, 5),
+      animation: {
+        preset: "slide-right",
+        duration: 0.8,
+        delay: 0.12,
+        easing: "easeOut",
+        trigger: "page-enter",
+      },
       style: { color: "#f1eadc", fontSize: 82, lineHeight: .92, fontWeight: 700 },
     },
     {
@@ -191,6 +205,13 @@ const home: SitePage = {
       desktop: layout(420, 80, 720, 720, 3),
       mobile: layout(35, 210, 330, 330, 3),
       action: { type: "navigate", targetPageId: "about" },
+      animation: {
+        preset: "scale",
+        duration: 0.9,
+        delay: 0.18,
+        easing: "easeOut",
+        trigger: "page-enter",
+      },
     },
     {
       id: "hero-tagline",
@@ -199,6 +220,13 @@ const home: SitePage = {
       content: "把每一段旋律\n刻進值得被記住的時光。",
       desktop: layout(245, 720, 360, 100, 5),
       mobile: layout(24, 730, 220, 80, 5),
+      animation: {
+        preset: "fade-up",
+        duration: 0.75,
+        delay: 0.4,
+        easing: "easeOut",
+        trigger: "page-enter",
+      },
       style: { color: "#efe5d4", fontSize: 18, lineHeight: 1.5, fontWeight: 600 },
     },
   ],
