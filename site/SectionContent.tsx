@@ -2,6 +2,7 @@
 
 import type { SectionId } from "./scene-data";
 import "./section-content.css";
+import { MemberCarousel } from "./MemberCarousel";
 
 export function SectionContent({ section }: { section: SectionId }) {
   if (section === "about") return <AboutVisual />;
@@ -41,16 +42,7 @@ function EventsVisual() {
 }
 
 function MembersVisual() {
-  return (
-    <div className="member-strip" aria-label="十位人物照片預留位置">
-      {Array.from({ length: 10 }, (_, index) => (
-        <div className="member-placeholder" key={index}>
-          <span>{String(index + 1).padStart(2, "0")}</span>
-          <small>{index === 9 ? "指導老師" : "團員"}</small>
-        </div>
-      ))}
-    </div>
-  );
+  return <MemberCarousel />;
 }
 
 function BookingVisual() {
