@@ -44,6 +44,9 @@ export function makeNavElements(
       fontSize: 15,
       fontWeight: 700,
       whiteSpace: "nowrap",
+      textAlign: "center",
+      borderBottom: "1px solid rgba(110, 77, 39, .35)",
+      paddingBottom: 5,
     },
   }));
 }
@@ -62,7 +65,7 @@ export function makeHomeExtraElements(
       animation: {
         preset: "fade",
         duration: 0.8,
-        delay: 0.1,
+        delay: 1.05,
         easing: "easeOut",
         trigger: "page-enter",
       },
@@ -87,7 +90,7 @@ export function makeHomeExtraElements(
       animation: {
         preset: "slide-left",
         duration: 0.7,
-        delay: 0.25,
+        delay: 0.75,
         easing: "easeOut",
         trigger: "page-enter",
       },
@@ -107,7 +110,7 @@ export function makeHomeExtraElements(
       animation: {
         preset: "fade-up",
         duration: 0.7,
-        delay: 0.35,
+        delay: 0.9,
         easing: "easeOut",
         trigger: "page-enter",
       },
@@ -143,7 +146,7 @@ export function makeHomeExtraElements(
       animation: {
         preset: "fade-up",
         duration: 0.7,
-        delay: 0.5,
+        delay: 1.15,
         easing: "easeOut",
         trigger: "page-enter",
       },
@@ -168,7 +171,7 @@ export function makeHomeExtraElements(
       animation: {
         preset: "hand-cycle",
         duration: 7,
-        delay: 0,
+        delay: 1.4,
         easing: "easeInOut",
         trigger: "loop",
       },
