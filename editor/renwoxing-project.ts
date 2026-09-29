@@ -29,13 +29,6 @@ function sharedInnerElements(): SiteElement[] {
       content: bookBackground,
       desktop: layout(520, 0, 1080, 900, 1),
       mobile: layout(0, 310, 390, 534, 1),
-      animation: {
-        preset: "fade",
-        duration: 0.8,
-        delay: 0,
-        easing: "easeOut",
-        trigger: "page-enter",
-      },
       style: { objectFit: "cover" },
     },
     {
@@ -179,6 +172,13 @@ const home: SitePage = {
       content: heroBackground,
       desktop: layout(0, 0, 1600, 900, 1),
       mobile: layout(0, 0, 390, 844, 1),
+      animation: {
+        preset: "fade",
+        duration: 0.8,
+        delay: 0,
+        easing: "easeOut",
+        trigger: "page-enter",
+      },
       style: { objectFit: "cover" },
     },
     {
