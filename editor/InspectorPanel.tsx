@@ -77,7 +77,7 @@ export function InspectorPanel({
     element.content === "members";
   const carouselSpeed = Number(
     element.settings?.[viewport]?.speed ??
-      (viewport === "mobile" ? 90 : 38),
+      (viewport === "mobile" ? 120 : 42),
   );
 
   return (
