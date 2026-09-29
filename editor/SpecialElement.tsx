@@ -5,8 +5,19 @@ import { ActivityGallery } from "@/site/ActivityGallery";
 import { MemberCarousel } from "@/site/MemberCarousel";
 import { TapCue } from "@/site/TapCue";
 import { VINYL_ASSETS } from "@/site/VinylStage";
+import type { ViewportMode } from "./model";
 
-export function SpecialElement({ name }: { name: string }) {
+type Props = {
+  name: string;
+  viewport: ViewportMode;
+  settings?: Record<string, string | number | boolean>;
+};
+
+export function SpecialElement({
+  name,
+  viewport,
+  settings,
+}: Props) {
   if (name === "vinyl" || name === "vinyl-compact") {
     return <EditorVinyl />;
   }
@@ -14,7 +25,13 @@ export function SpecialElement({ name }: { name: string }) {
     return <TapCue embedded />;
   }
   if (name === "members") {
-    return <MemberCarousel embedded />;
+    const fallback = viewport === "mobile" ? 90 : 38;
+    return (
+      <MemberCarousel
+        embedded
+        speedSeconds={Number(settings?.speed ?? fallback)}
+      />
+    );
   }
   if (name === "activities") {
     return <ActivityGallery embedded />;
