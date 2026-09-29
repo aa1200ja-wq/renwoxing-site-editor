@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import type { SiteElement, ViewportMode } from "./model";
 import { motionProps } from "./animation";
+import { SpecialElement } from "./SpecialElement";
 
 type Props = {
   element: SiteElement;
@@ -51,5 +52,6 @@ function ElementContent({ element }: { element: SiteElement }) {
   if (element.type === "youtube") return <iframe src={element.content} title={element.name} allowFullScreen />;
   if (element.type === "button") return <button type="button">{element.content}</button>;
   if (element.type === "line") return <span className="line-element" />;
+  if (element.type === "component") return <SpecialElement name={element.content} />;
   return <div className="text-element">{element.content}</div>;
 }
