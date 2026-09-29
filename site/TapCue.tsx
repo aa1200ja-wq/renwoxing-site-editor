@@ -1,5 +1,7 @@
 "use client";
 
+import "./tap-cue.css";
+
 const handUrl = "https://at.adobe.com/5PsW5E8IbnwQQyie";
 
 export function TapCue() {
