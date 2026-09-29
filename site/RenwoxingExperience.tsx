@@ -8,6 +8,8 @@ import type {
   SiteElement,
   ViewportMode,
 } from "@/editor/model";
+import { ImageLightbox } from "./ImageLightbox";
+import "./image-lightbox.css";
 
 function useViewportMode() {
   const [viewport, setViewport] =
@@ -54,6 +56,8 @@ function useFitScale(
 
 export function RenwoxingExperience() {
   const [pageId, setPageId] = useState("home");
+  const [lightboxSrc, setLightboxSrc] =
+    useState<string | null>(null);
   const viewport = useViewportMode();
 
   const page = useMemo(
@@ -68,8 +72,16 @@ export function RenwoxingExperience() {
   const scale = useFitScale(size.width, size.height);
 
   function handleAction(element: SiteElement) {
-    if (element.action?.type !== "navigate") return;
-    setPageId(element.action.targetPageId);
+    if (!element.action) return;
+
+    if (element.action.type === "navigate") {
+      setPageId(element.action.targetPageId);
+      return;
+    }
+
+    if (element.action.type === "lightbox") {
+      setLightboxSrc(element.content);
+    }
   }
 
   return (
@@ -106,6 +118,11 @@ export function RenwoxingExperience() {
           />
         </motion.div>
       </AnimatePresence>
+
+      <ImageLightbox
+        src={lightboxSrc}
+        onClose={() => setLightboxSrc(null)}
+      />
     </main>
   );
 }
