@@ -181,18 +181,3 @@ button { cursor: pointer; }
 .moveable-line.moveable-dashed {
   background: #39a7ff !important;
 }
-
-.site-element-motion {
-  width: 100%;
-  height: 100%;
-}
-
-.public-stage-slot {
-  position: relative;
-  overflow: hidden;
-}
-
-.public-stage-slot > .public-stage-frame {
-  position: absolute;
-  inset: 0;
-}
