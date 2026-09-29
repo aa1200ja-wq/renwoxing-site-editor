@@ -17,7 +17,7 @@ type LayoutFactory = (
   visible: boolean;
 };
 
-const handUrl = "https://at.adobe.com/5PsW5E8IbnwQQyie";
+const handUrl = "/assets/renwoxing/tap-hand.png";
 
 export function makeNavElements(
   layout: LayoutFactory,
