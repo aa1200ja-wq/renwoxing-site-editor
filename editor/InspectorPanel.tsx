@@ -7,6 +7,7 @@ type Props = {
   viewport: ViewportMode;
   onLayoutChange: (patch: Partial<ElementLayout>) => void;
   onContentChange: (content: string) => void;
+  onStyleChange: (patch: Record<string, string | number>) => void;
   onDelete: () => void;
 };
 
@@ -36,6 +37,7 @@ export function InspectorPanel({
   viewport,
   onLayoutChange,
   onContentChange,
+  onStyleChange,
   onDelete,
 }: Props) {
   if (!element) {
@@ -57,6 +59,8 @@ export function InspectorPanel({
     "image",
     "youtube",
   ].includes(element.type);
+  const editableTypography =
+    element.type === "text" || element.type === "button";
 
   return (
     <aside className="editor-inspector">
@@ -82,6 +86,23 @@ export function InspectorPanel({
           </label>
         ))}
       </div>
+
+      {editableTypography && (
+        <label className="content-field">
+          <span>字體大小</span>
+          <input
+            type="number"
+            min="6"
+            max="300"
+            value={Number(element.style?.fontSize ?? 16)}
+            onChange={(event) =>
+              onStyleChange({
+                fontSize: Number(event.target.value),
+              })
+            }
+          />
+        </label>
+      )}
 
       <label className="visible-toggle">
         <input
