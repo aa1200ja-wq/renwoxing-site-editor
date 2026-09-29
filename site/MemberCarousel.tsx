@@ -5,13 +5,13 @@ import { useState } from "react";
 import { members, type Member } from "./member-data";
 import "./member-carousel.css";
 
-export function MemberCarousel() {
+export function MemberCarousel({ embedded = false }: { embedded?: boolean }) {
   const [selected, setSelected] = useState<Member | null>(null);
   const loopMembers = [...members, ...members];
 
   return (
     <>
-      <div className="member-carousel" aria-label="十位人物慢速輪播">
+      <div className={embedded ? "member-carousel embedded" : "member-carousel"} aria-label="十位人物慢速輪播">
         <div className="member-track">
           {loopMembers.map((member, index) => (
             <button
