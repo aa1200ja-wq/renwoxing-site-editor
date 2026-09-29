@@ -1,10 +1,13 @@
 import type { SiteElement, SitePage, SiteProject } from "./model";
 import { sections } from "@/site/scene-data";
 import {
-  makeEventElements,
   makeHomeExtraElements,
   makeNavElements,
 } from "./renwoxing-page-elements";
+import {
+  makeContactElements,
+  makeEventElements,
+} from "./renwoxing-section-elements";
 
 const heroBackground = "https://at.adobe.com/ubJdGzxDCypT1UMG";
 const bookBackground = "/assets/renwoxing/album-spread.webp";
@@ -55,6 +58,10 @@ function sectionVisuals(index: number): SiteElement[] {
 
   if (id === "events") {
     return makeEventElements(layout);
+  }
+
+  if (id === "contact") {
+    return makeContactElements(layout);
   }
 
   if (id === "members") {
