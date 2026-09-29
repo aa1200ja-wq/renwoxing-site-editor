@@ -11,9 +11,17 @@ type Props = {
   editable?: boolean;
   selected?: boolean;
   onSelect?: (id: string) => void;
+  onAction?: (element: SiteElement) => void;
 };
 
-export function ElementView({ element, viewport, editable = false, selected = false, onSelect }: Props) {
+export function ElementView({
+  element,
+  viewport,
+  editable = false,
+  selected = false,
+  onSelect,
+  onAction,
+}: Props) {
   const layout = element[viewport];
   if (!layout.visible) return null;
 
@@ -26,6 +34,7 @@ export function ElementView({ element, viewport, editable = false, selected = fa
     zIndex: layout.zIndex,
     transform: "rotate(" + layout.rotation + "deg)",
     boxSizing: "border-box",
+    cursor: !editable && element.action ? "pointer" : undefined,
     ...element.style,
   };
 
@@ -40,6 +49,10 @@ export function ElementView({ element, viewport, editable = false, selected = fa
         event.stopPropagation();
         onSelect?.(element.id);
       }}
+      onClick={() => {
+        if (editable || !element.action) return;
+        onAction?.(element);
+      }}
       {...motionProps(element.animation)}
     >
       <ElementContent element={element} />
@@ -48,10 +61,37 @@ export function ElementView({ element, viewport, editable = false, selected = fa
 }
 
 function ElementContent({ element }: { element: SiteElement }) {
-  if (element.type === "image") return <img src={element.content} alt={element.name} draggable={false} />;
-  if (element.type === "youtube") return <iframe src={element.content} title={element.name} allowFullScreen />;
-  if (element.type === "button") return <button type="button">{element.content}</button>;
-  if (element.type === "line") return <span className="line-element" />;
-  if (element.type === "component") return <SpecialElement name={element.content} />;
+  if (element.type === "image") {
+    return (
+      <img
+        src={element.content}
+        alt={element.name}
+        draggable={false}
+      />
+    );
+  }
+
+  if (element.type === "youtube") {
+    return (
+      <iframe
+        src={element.content}
+        title={element.name}
+        allowFullScreen
+      />
+    );
+  }
+
+  if (element.type === "button") {
+    return <button type="button">{element.content}</button>;
+  }
+
+  if (element.type === "line") {
+    return <span className="line-element" />;
+  }
+
+  if (element.type === "component") {
+    return <SpecialElement name={element.content} />;
+  }
+
   return <div className="text-element">{element.content}</div>;
 }
