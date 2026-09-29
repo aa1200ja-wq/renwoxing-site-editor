@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import type { SectionId } from "./scene-data";
 import { sections } from "./scene-data";
-import { VinylStage } from "./VinylStage";
+import { VinylRecord } from "./VinylRecord";
 import { SectionContent } from "./SectionContent";
 
 type Props = {
@@ -21,7 +21,7 @@ export function ContentScene({ active, onChange, onHome }: Props) {
         <button className="brand-mark" onClick={onHome} type="button">
           任我行
         </button>
-        <VinylStage compact onActivate={onHome} />
+        <VinylRecord variant="rail" onActivate={onHome} />
         <p>旋律仍在前行</p>
       </div>
 
