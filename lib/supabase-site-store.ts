@@ -1,7 +1,8 @@
 import type { SiteProject } from "@/editor/model";
 
-const SUPABASE_URL = "https://fgjhpwoyybmruvtlnbbh.supabase.co";
-const SUPABASE_KEY =
+export const SUPABASE_URL =
+  "https://fgjhpwoyybmruvtlnbbh.supabase.co";
+export const SUPABASE_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZnamhwd295eWJtcnV2dGxuYmJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2OTUwNzgsImV4cCI6MjEwNjI3MTA3OH0._9qQcT3Oi8_ebUJwJuA8c-yumIulT0aDJEIsCZxYMbA";
 
 type StoredRow = { data: SiteProject };

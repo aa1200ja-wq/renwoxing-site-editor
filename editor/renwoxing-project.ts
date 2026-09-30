@@ -1,4 +1,5 @@
 import type { SiteElement, SitePage, SiteProject } from "./model";
+import { defaultMemberCarouselData } from "./member-config";
 import { sections } from "@/site/scene-data";
 import {
   makeHomeExtraElements,
@@ -75,6 +76,9 @@ function sectionVisuals(index: number): SiteElement[] {
       settings: {
         desktop: { speed: 42 },
         mobile: { speed: 120 },
+      },
+      componentData: {
+        memberCarousel: defaultMemberCarouselData(),
       },
     }];
   }

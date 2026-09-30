@@ -3,8 +3,16 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { createPortal } from "react-dom";
-import { members, type Member } from "@/site/member-data";
-import type { ViewportMode } from "./model";
+import {
+  memberModalFor,
+  resolveMemberCarouselData,
+} from "./member-config";
+import type {
+  ComponentData,
+  MemberItem,
+  MemberModalConfig,
+  ViewportMode,
+} from "./model";
 import "./special-elements.css";
 
 const vinylAssets = {
@@ -17,12 +25,14 @@ type Props = {
   name: string;
   viewport: ViewportMode;
   settings?: Record<string, string | number | boolean>;
+  componentData?: ComponentData;
 };
 
 export function SpecialElement({
   name,
   viewport,
   settings,
+  componentData,
 }: Props) {
   if (name === "vinyl" || name === "vinyl-compact") {
     return <EditorVinyl />;
@@ -30,9 +40,14 @@ export function SpecialElement({
 
   if (name === "members") {
     const fallback = viewport === "mobile" ? 120 : 42;
+    const data = resolveMemberCarouselData(
+      componentData?.memberCarousel,
+    );
     return (
       <EditorMemberCarousel
         speedSeconds={Number(settings?.speed ?? fallback)}
+        members={data.members}
+        modal={memberModalFor(componentData?.memberCarousel, viewport)}
       />
     );
   }
@@ -70,11 +85,19 @@ function EditorVinyl() {
 
 function EditorMemberCarousel({
   speedSeconds,
+  members,
+  modal,
 }: {
   speedSeconds: number;
+  members: MemberItem[];
+  modal: MemberModalConfig;
 }) {
-  const [selected, setSelected] = useState<Member | null>(null);
+  const [selected, setSelected] = useState<MemberItem | null>(null);
   const loopMembers = [...members, ...members];
+
+  if (!members.length) {
+    return <div className="editor-special-placeholder">尚無人物</div>;
+  }
 
   return (
     <>
@@ -119,6 +142,12 @@ function EditorMemberCarousel({
               >
                 <motion.article
                   className="editor-member-modal"
+                  style={{
+                    width:
+                      "min(calc(100vw - 32px), " +
+                      (modal.width + 36) +
+                      "px)",
+                  }}
                   initial={{ opacity: 0, scale: 0.92, y: 20 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.96, y: 10 }}
@@ -137,6 +166,11 @@ function EditorMemberCarousel({
                     className="editor-member-detail-photo"
                     src={selected.detail}
                     alt={selected.name}
+                    style={{
+                      height:
+                        "min(" + modal.height + "px, 72vh)",
+                      objectFit: modal.fit,
+                    }}
                   />
                   <p>{selected.role}</p>
                   <h3>{selected.name}</h3>

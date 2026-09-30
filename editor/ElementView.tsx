@@ -89,7 +89,6 @@ function ElementContent({
 
   if (element.type === "youtube") {
     const embedUrl = toYouTubeEmbedUrl(element.content);
-
     if (!embedUrl) {
       return editable ? (
         <div
@@ -135,6 +134,7 @@ function ElementContent({
         name={element.content}
         viewport={viewport}
         settings={element.settings?.[viewport]}
+        componentData={element.componentData}
       />
     );
   }

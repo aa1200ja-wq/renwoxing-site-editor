@@ -11,6 +11,7 @@ import {
   shouldSyncInnerContent,
 } from "./inner-page-sync";
 import type {
+  ComponentData,
   ElementLayout,
   SiteElement,
   SiteProject,
@@ -42,7 +43,6 @@ export function EditorShell({ initialProject }: { initialProject: SiteProject })
     () => project.pages.find((item) => item.id === pageId) ?? project.pages[0],
     [pageId, project.pages],
   );
-
   const selectedElement = useMemo(
     () => page.elements.find((item) => item.id === selectedId) ?? null,
     [page.elements, selectedId],
@@ -75,7 +75,6 @@ export function EditorShell({ initialProject }: { initialProject: SiteProject })
         const matchesPage =
           item.id === page.id || (sync && isInnerPage(item.id));
         if (!matchesPage) return item;
-
         return {
           ...item,
           elements: item.elements.map((element) =>
@@ -115,12 +114,16 @@ export function EditorShell({ initialProject }: { initialProject: SiteProject })
       ...element,
       settings: {
         ...element.settings,
-        [viewport]: {
-          ...element.settings?.[viewport],
-          ...patch,
-        },
+        [viewport]: { ...element.settings?.[viewport], ...patch },
       },
     }));
+  }
+
+  function patchComponentData(componentData: ComponentData) {
+    updateSelected(
+      (element) => ({ ...element, componentData }),
+      false,
+    );
   }
 
   function addElement(type: AddableElementType) {
@@ -233,6 +236,7 @@ export function EditorShell({ initialProject }: { initialProject: SiteProject })
         onContentChange={patchSelectedContent}
         onStyleChange={patchSelectedStyle}
         onSettingChange={patchSelectedSetting}
+        onComponentDataChange={patchComponentData}
         onDelete={deleteSelectedElement}
       />
     </div>

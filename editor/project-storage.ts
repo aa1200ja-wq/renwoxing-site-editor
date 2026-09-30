@@ -11,9 +11,14 @@ function requireToken() {
   const existing = storedToken();
   if (existing) return existing;
 
-  const entered = window.prompt("請輸入任我行編輯器儲存金鑰")?.trim() ?? "";
+  const entered =
+    window.prompt("請輸入任我行編輯器儲存金鑰")?.trim() ?? "";
   if (entered) window.localStorage.setItem(TOKEN_KEY, entered);
   return entered;
+}
+
+export function getEditorToken() {
+  return requireToken();
 }
 
 export async function loadDraft() {
@@ -29,7 +34,9 @@ export async function loadDraft() {
     return null;
   }
 
-  const payload = (await response.json()) as { project?: SiteProject | null };
+  const payload = (await response.json()) as {
+    project?: SiteProject | null;
+  };
   return payload.project ?? null;
 }
 

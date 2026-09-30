@@ -1,5 +1,11 @@
 export type ViewportMode = "desktop" | "mobile";
-export type ElementType = "text" | "image" | "youtube" | "button" | "line" | "component";
+export type ElementType =
+  | "text"
+  | "image"
+  | "youtube"
+  | "button"
+  | "line"
+  | "component";
 
 export type ViewportSize = {
   width: number;
@@ -17,7 +23,17 @@ export type ElementLayout = {
 };
 
 export type AnimationTrigger = "page-enter" | "hover" | "loop";
-export type AnimationPreset = "none" | "fade" | "fade-up" | "slide-left" | "slide-right" | "scale" | "spin" | "blink" | "hand-cycle" | "hover-scale";
+export type AnimationPreset =
+  | "none"
+  | "fade"
+  | "fade-up"
+  | "slide-left"
+  | "slide-right"
+  | "scale"
+  | "spin"
+  | "blink"
+  | "hand-cycle"
+  | "hover-scale";
 
 export type AnimationSpec = {
   preset: AnimationPreset;
@@ -28,13 +44,31 @@ export type AnimationSpec = {
 };
 
 export type SiteAction =
-  | {
-      type: "navigate";
-      targetPageId: string;
-    }
-  | {
-      type: "lightbox";
-    };
+  | { type: "navigate"; targetPageId: string }
+  | { type: "lightbox" };
+
+export type MemberItem = {
+  id: string;
+  name: string;
+  role: string;
+  cover: string;
+  detail: string;
+};
+
+export type MemberModalConfig = {
+  width: number;
+  height: number;
+  fit: "contain" | "cover";
+};
+
+export type MemberCarouselData = {
+  members?: MemberItem[];
+  modal?: Partial<Record<ViewportMode, MemberModalConfig>>;
+};
+
+export type ComponentData = {
+  memberCarousel?: MemberCarouselData;
+};
 
 export type SiteElement = {
   id: string;
@@ -46,10 +80,13 @@ export type SiteElement = {
   style?: Record<string, string | number>;
   desktopStyle?: Record<string, string | number>;
   mobileStyle?: Record<string, string | number>;
-  settings?: Partial<Record<
-    ViewportMode,
-    Record<string, string | number | boolean>
-  >>;
+  settings?: Partial<
+    Record<
+      ViewportMode,
+      Record<string, string | number | boolean>
+    >
+  >;
+  componentData?: ComponentData;
   animation?: AnimationSpec;
   action?: SiteAction;
 };

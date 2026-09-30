@@ -1,6 +1,12 @@
 "use client";
 
-import type { ElementLayout, SiteElement, ViewportMode } from "./model";
+import { MemberManager } from "./MemberManager";
+import type {
+  ComponentData,
+  ElementLayout,
+  SiteElement,
+  ViewportMode,
+} from "./model";
 import { toYouTubeEmbedUrl } from "./youtube-url";
 
 type Props = {
@@ -12,6 +18,7 @@ type Props = {
   onSettingChange: (
     patch: Record<string, string | number | boolean>,
   ) => void;
+  onComponentDataChange: (data: ComponentData) => void;
   onDelete: () => void;
 };
 
@@ -43,6 +50,7 @@ export function InspectorPanel({
   onContentChange,
   onStyleChange,
   onSettingChange,
+  onComponentDataChange,
   onDelete,
 }: Props) {
   if (!element) {
@@ -182,6 +190,14 @@ export function InspectorPanel({
             </span>
           )}
         </label>
+      )}
+
+      {isMemberCarousel && (
+        <MemberManager
+          element={element}
+          viewport={viewport}
+          onChange={onComponentDataChange}
+        />
       )}
 
       <button
