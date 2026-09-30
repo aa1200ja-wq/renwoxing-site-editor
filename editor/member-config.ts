@@ -6,6 +6,11 @@ import type {
   ViewportMode,
 } from "./model";
 
+type ResolvedMemberCarouselData = {
+  members: MemberItem[];
+  modal: Record<ViewportMode, MemberModalConfig>;
+};
+
 const fallbackModal: Record<ViewportMode, MemberModalConfig> = {
   desktop: { width: 424, height: 565, fit: "contain" },
   mobile: { width: 330, height: 440, fit: "contain" },
@@ -30,7 +35,7 @@ export function defaultMemberCarouselData(): MemberCarouselData {
 
 export function resolveMemberCarouselData(
   data?: MemberCarouselData,
-): Required<MemberCarouselData> {
+): ResolvedMemberCarouselData {
   return {
     members:
       data?.members && data.members.length
@@ -52,6 +57,6 @@ export function resolveMemberCarouselData(
 export function memberModalFor(
   data: MemberCarouselData | undefined,
   viewport: ViewportMode,
-) {
+): MemberModalConfig {
   return resolveMemberCarouselData(data).modal[viewport];
 }
