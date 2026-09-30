@@ -2,6 +2,7 @@
 
 import type { AddableElementType } from "./element-factory";
 import type { SitePage, SiteProject } from "./model";
+import "./inner-page-sync.css";
 
 type Props = {
   project: SiteProject;
@@ -10,6 +11,10 @@ type Props = {
   onPageChange: (pageId: string) => void;
   onElementSelect: (elementId: string) => void;
   onAddElement: (type: AddableElementType) => void;
+  innerSyncAvailable: boolean;
+  syncInnerPages: boolean;
+  onSyncInnerPagesChange: (enabled: boolean) => void;
+  onApplyInnerTemplate: () => void;
 };
 
 const addButtons: Array<{
@@ -30,6 +35,10 @@ export function EditorSidebar({
   onPageChange,
   onElementSelect,
   onAddElement,
+  innerSyncAvailable,
+  syncInnerPages,
+  onSyncInnerPagesChange,
+  onApplyInnerTemplate,
 }: Props) {
   return (
     <aside className="editor-sidebar">
@@ -45,6 +54,27 @@ export function EditorSidebar({
           </button>
         ))}
       </div>
+
+      {innerSyncAvailable && (
+        <div className="inner-sync-box">
+          <label>
+            <input
+              type="checkbox"
+              checked={syncInnerPages}
+              onChange={(event) =>
+                onSyncInnerPagesChange(event.target.checked)
+              }
+            />
+            <strong>六個內頁連動</strong>
+          </label>
+          <small>
+            共用版型的位置、尺寸、字級與顯示狀態會同步；各頁文字內容保留。
+          </small>
+          <button type="button" onClick={onApplyInnerTemplate}>
+            套用本頁共用版型到其他五頁
+          </button>
+        </div>
+      )}
 
       <p className="panel-title">所有元素</p>
       <div className="element-list">

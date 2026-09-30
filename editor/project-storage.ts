@@ -17,7 +17,7 @@ function requireToken() {
 }
 
 export async function loadDraft() {
-  const token = storedToken();
+  const token = requireToken();
   if (!token) return null;
 
   const response = await fetch("/api/site-project", {

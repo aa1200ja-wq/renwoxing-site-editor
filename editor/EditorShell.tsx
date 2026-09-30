@@ -4,7 +4,18 @@ import { useEffect, useMemo, useState } from "react";
 import { createElement, type AddableElementType } from "./element-factory";
 import { EditorSidebar } from "./EditorSidebar";
 import { InspectorPanel } from "./InspectorPanel";
-import type { ElementLayout, SiteProject, ViewportMode } from "./model";
+import {
+  applyInnerTemplate,
+  canSyncInnerElement,
+  isInnerPage,
+  shouldSyncInnerContent,
+} from "./inner-page-sync";
+import type {
+  ElementLayout,
+  SiteElement,
+  SiteProject,
+  ViewportMode,
+} from "./model";
 import { loadDraft, persistProject } from "./project-storage";
 import { SelectionOverlay } from "./SelectionOverlay";
 import { SiteRenderer } from "./SiteRenderer";
@@ -14,6 +25,7 @@ export function EditorShell({ initialProject }: { initialProject: SiteProject })
   const [pageId, setPageId] = useState(initialProject.pages[0].id);
   const [viewport, setViewport] = useState<ViewportMode>("desktop");
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [syncInnerPages, setSyncInnerPages] = useState(false);
   const [saveState, setSaveState] = useState("尚未儲存");
   const [saving, setSaving] = useState(false);
 
@@ -47,58 +59,68 @@ export function EditorShell({ initialProject }: { initialProject: SiteProject })
     }));
   }
 
-  function patchSelectedLayout(patch: Partial<ElementLayout>) {
+  function updateSelected(
+    updater: (element: SiteElement) => SiteElement,
+    allowSync = true,
+  ) {
     if (!selectedId) return;
-    updateCurrentPage((elements) =>
-      elements.map((element) =>
-        element.id === selectedId
-          ? { ...element, [viewport]: { ...element[viewport], ...patch } }
-          : element,
-      ),
-    );
+    const sync =
+      allowSync &&
+      syncInnerPages &&
+      canSyncInnerElement(page.id, selectedId);
+
+    setProject((current) => ({
+      ...current,
+      pages: current.pages.map((item) => {
+        const matchesPage =
+          item.id === page.id || (sync && isInnerPage(item.id));
+        if (!matchesPage) return item;
+
+        return {
+          ...item,
+          elements: item.elements.map((element) =>
+            element.id === selectedId ? updater(element) : element,
+          ),
+        };
+      }),
+    }));
+  }
+
+  function patchSelectedLayout(patch: Partial<ElementLayout>) {
+    updateSelected((element) => ({
+      ...element,
+      [viewport]: { ...element[viewport], ...patch },
+    }));
   }
 
   function patchSelectedContent(content: string) {
-    if (!selectedId) return;
-    updateCurrentPage((elements) =>
-      elements.map((element) =>
-        element.id === selectedId ? { ...element, content } : element,
-      ),
+    updateSelected(
+      (element) => ({ ...element, content }),
+      shouldSyncInnerContent(page.id, selectedId),
     );
   }
 
   function patchSelectedStyle(patch: Record<string, string | number>) {
-    if (!selectedId) return;
     const styleKey = viewport === "desktop" ? "desktopStyle" : "mobileStyle";
-    updateCurrentPage((elements) =>
-      elements.map((element) =>
-        element.id === selectedId
-          ? { ...element, [styleKey]: { ...element[styleKey], ...patch } }
-          : element,
-      ),
-    );
+    updateSelected((element) => ({
+      ...element,
+      [styleKey]: { ...element[styleKey], ...patch },
+    }));
   }
 
   function patchSelectedSetting(
     patch: Record<string, string | number | boolean>,
   ) {
-    if (!selectedId) return;
-    updateCurrentPage((elements) =>
-      elements.map((element) =>
-        element.id === selectedId
-          ? {
-              ...element,
-              settings: {
-                ...element.settings,
-                [viewport]: {
-                  ...element.settings?.[viewport],
-                  ...patch,
-                },
-              },
-            }
-          : element,
-      ),
-    );
+    updateSelected((element) => ({
+      ...element,
+      settings: {
+        ...element.settings,
+        [viewport]: {
+          ...element.settings?.[viewport],
+          ...patch,
+        },
+      },
+    }));
   }
 
   function addElement(type: AddableElementType) {
@@ -115,16 +137,23 @@ export function EditorShell({ initialProject }: { initialProject: SiteProject })
     setSelectedId(null);
   }
 
+  function applyCurrentTemplate() {
+    setProject((current) => applyInnerTemplate(current, page.id));
+    setSaveState("六個內頁版型已同步，尚未儲存");
+  }
+
   async function save(action: "save" | "publish") {
     setSaving(true);
     setSaveState(action === "publish" ? "發布中…" : "儲存中…");
     try {
       const result = await persistProject(project, action);
-      if (result.cancelled) {
-        setSaveState("已取消");
-      } else {
-        setSaveState(action === "publish" ? "已發布" : "草稿已儲存");
-      }
+      setSaveState(
+        result.cancelled
+          ? "已取消"
+          : action === "publish"
+            ? "已發布"
+            : "草稿已儲存",
+      );
     } catch (error) {
       setSaveState(error instanceof Error ? error.message : "儲存失敗");
     } finally {
@@ -176,6 +205,10 @@ export function EditorShell({ initialProject }: { initialProject: SiteProject })
         }}
         onElementSelect={setSelectedId}
         onAddElement={addElement}
+        innerSyncAvailable={isInnerPage(page.id)}
+        syncInnerPages={syncInnerPages}
+        onSyncInnerPagesChange={setSyncInnerPages}
+        onApplyInnerTemplate={applyCurrentTemplate}
       />
 
       <main className="editor-canvas">
