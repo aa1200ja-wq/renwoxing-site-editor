@@ -1,7 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { members } from "@/site/member-data";
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
+import { createPortal } from "react-dom";
+import { members, type Member } from "@/site/member-data";
 import type { ViewportMode } from "./model";
 import "./special-elements.css";
 
@@ -71,24 +73,79 @@ function EditorMemberCarousel({
 }: {
   speedSeconds: number;
 }) {
+  const [selected, setSelected] = useState<Member | null>(null);
   const loopMembers = [...members, ...members];
 
   return (
-    <div className="editor-member-carousel">
-      <div
-        className="editor-member-track"
-        style={{ animationDuration: speedSeconds + "s" }}
-      >
-        {loopMembers.map((member, index) => (
-          <div
-            className="editor-member-card"
-            key={member.id + "-" + index}
-          >
-            <img src={member.cover} alt={member.name} />
-            <strong>{member.name}</strong>
-          </div>
-        ))}
+    <>
+      <div className="editor-member-carousel">
+        <div
+          className="editor-member-track"
+          style={{
+            animationDuration: speedSeconds + "s",
+            animationPlayState: selected ? "paused" : "running",
+          }}
+        >
+          {loopMembers.map((member, index) => (
+            <button
+              type="button"
+              className="editor-member-card"
+              key={member.id + "-" + index}
+              onClick={(event) => {
+                event.stopPropagation();
+                setSelected(member);
+              }}
+            >
+              <img src={member.cover} alt={member.name} />
+              <strong>{member.name}</strong>
+            </button>
+          ))}
+        </div>
       </div>
-    </div>
+
+      {typeof document !== "undefined" &&
+        createPortal(
+          <AnimatePresence>
+            {selected && (
+              <motion.div
+                className="editor-member-modal-backdrop"
+                role="dialog"
+                aria-modal="true"
+                aria-label={selected.name}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setSelected(null)}
+              >
+                <motion.article
+                  className="editor-member-modal"
+                  initial={{ opacity: 0, scale: 0.92, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.96, y: 10 }}
+                  transition={{ duration: 0.28 }}
+                  onClick={(event) => event.stopPropagation()}
+                >
+                  <button
+                    type="button"
+                    className="editor-member-modal-close"
+                    onClick={() => setSelected(null)}
+                    aria-label="關閉人物照片"
+                  >
+                    ×
+                  </button>
+                  <img
+                    className="editor-member-detail-photo"
+                    src={selected.detail}
+                    alt={selected.name}
+                  />
+                  <p>{selected.role}</p>
+                  <h3>{selected.name}</h3>
+                </motion.article>
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body,
+        )}
+    </>
   );
 }
