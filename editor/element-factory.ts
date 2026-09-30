@@ -26,7 +26,7 @@ const defaults: Record<
   },
   youtube: {
     name: "YouTube",
-    content: "about:blank",
+    content: "",
     width: 480,
     height: 270,
   },

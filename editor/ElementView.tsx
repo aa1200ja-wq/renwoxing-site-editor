@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import type { SiteElement, ViewportMode } from "./model";
 import { motionProps } from "./animation";
 import { SpecialElement } from "./SpecialElement";
+import { toYouTubeEmbedUrl } from "./youtube-url";
 
 type Props = {
   element: SiteElement;
@@ -58,7 +59,11 @@ export function ElementView({
       }}
       {...motionProps(element.animation)}
     >
-      <ElementContent element={element} viewport={viewport} />
+      <ElementContent
+        element={element}
+        viewport={viewport}
+        editable={editable}
+      />
     </motion.div>
   );
 }
@@ -66,9 +71,11 @@ export function ElementView({
 function ElementContent({
   element,
   viewport,
+  editable,
 }: {
   element: SiteElement;
   viewport: ViewportMode;
+  editable: boolean;
 }) {
   if (element.type === "image") {
     return (
@@ -81,11 +88,35 @@ function ElementContent({
   }
 
   if (element.type === "youtube") {
+    const embedUrl = toYouTubeEmbedUrl(element.content);
+
+    if (!embedUrl) {
+      return editable ? (
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "grid",
+            placeItems: "center",
+            background: "#17130e",
+            color: "#d8b56a",
+            fontFamily: "Arial, sans-serif",
+            fontSize: 14,
+            border: "1px solid rgba(216,181,106,.45)",
+          }}
+        >
+          請在右側貼上 YouTube 網址
+        </div>
+      ) : null;
+    }
+
     return (
       <iframe
-        src={element.content}
+        src={embedUrl}
         title={element.name}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowFullScreen
+        style={{ pointerEvents: editable ? "none" : "auto" }}
       />
     );
   }

@@ -1,6 +1,7 @@
 "use client";
 
 import type { ElementLayout, SiteElement, ViewportMode } from "./model";
+import { toYouTubeEmbedUrl } from "./youtube-url";
 
 type Props = {
   element: SiteElement | null;
@@ -31,7 +32,7 @@ const numericFields: Array<{
 
 function contentLabel(element: SiteElement) {
   if (element.type === "image") return "圖片網址";
-  if (element.type === "youtube") return "YouTube Embed 網址";
+  if (element.type === "youtube") return "YouTube 網址";
   return "文字內容";
 }
 
@@ -79,6 +80,10 @@ export function InspectorPanel({
     element.settings?.[viewport]?.speed ??
       (viewport === "mobile" ? 120 : 42),
   );
+  const youtubeValid =
+    element.type !== "youtube" ||
+    !element.content.trim() ||
+    Boolean(toYouTubeEmbedUrl(element.content));
 
   return (
     <aside className="editor-inspector">
@@ -162,8 +167,20 @@ export function InspectorPanel({
             onChange={(event) =>
               onContentChange(event.target.value)
             }
-            rows={5}
+            rows={element.type === "youtube" ? 3 : 5}
+            placeholder={
+              element.type === "youtube"
+                ? "貼上 youtube.com/watch、youtu.be 或 Shorts 網址"
+                : undefined
+            }
           />
+          {element.type === "youtube" && (
+            <span className="muted">
+              {youtubeValid
+                ? "直接貼一般 YouTube 分享網址即可，正式頁可直接播放。"
+                : "這不是可辨識的 YouTube 影片網址。"}
+            </span>
+          )}
         </label>
       )}
 
@@ -175,7 +192,7 @@ export function InspectorPanel({
         刪除元素
       </button>
       <span className="muted">
-        步驟5尚未儲存前，重新整理頁面可還原。
+        尚未儲存前，重新整理頁面可還原。
       </span>
     </aside>
   );
