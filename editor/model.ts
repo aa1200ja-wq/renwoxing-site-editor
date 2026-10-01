@@ -103,5 +103,6 @@ export type SitePage = {
 export type SiteProject = {
   id: string;
   name: string;
+  layoutVersion?: number;
   pages: SitePage[];
 };

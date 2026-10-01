@@ -14,6 +14,7 @@ import {
   isInnerPage,
   shouldSyncInnerContent,
 } from "./inner-page-sync";
+import { migrateInnerMobileLayout } from "./inner-mobile-layout";
 import type {
   ComponentData,
   ElementLayout,
@@ -25,7 +26,9 @@ import type {
 import { loadDraft, persistProject } from "./project-storage";
 const DELETE_SKIP_KEY = "renwoxing-page-delete-no-confirm";
 export function useEditorController(initialProject: SiteProject) {
-  const [project, setProject] = useState(initialProject);
+  const [project, setProject] = useState(() =>
+    migrateInnerMobileLayout(initialProject),
+  );
   const [pageId, setPageId] = useState(initialProject.pages[0].id);
   const [viewport, setViewport] = useState<ViewportMode>("desktop");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -38,8 +41,9 @@ export function useEditorController(initialProject: SiteProject) {
   useEffect(() => {
     loadDraft().then((draft) => {
       if (!draft) return;
-      setProject(draft);
-      setPageId(draft.pages[0].id);
+      const migrated = migrateInnerMobileLayout(draft);
+      setProject(migrated);
+      setPageId(migrated.pages[0].id);
       setSaveState("已載入草稿");
     });
   }, []);

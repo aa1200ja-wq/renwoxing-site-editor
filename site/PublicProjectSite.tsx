@@ -7,17 +7,24 @@ import type {
   ViewportMode,
 } from "@/editor/model";
 import { SiteRenderer } from "@/editor/SiteRenderer";
+import { migrateInnerMobileLayout } from "@/editor/inner-mobile-layout";
 import { PublicLightbox } from "./PublicLightbox";
 
 export function PublicProjectSite({ project }: { project: SiteProject }) {
-  const [pageId, setPageId] = useState(project.pages[0].id);
+  const normalizedProject = useMemo(
+    () => migrateInnerMobileLayout(project),
+    [project],
+  );
+  const [pageId, setPageId] = useState(normalizedProject.pages[0].id);
   const [viewport, setViewport] = useState<ViewportMode>("desktop");
   const [scale, setScale] = useState(1);
   const [lightbox, setLightbox] = useState<SiteElement | null>(null);
 
   const page = useMemo(
-    () => project.pages.find((item) => item.id === pageId) ?? project.pages[0],
-    [pageId, project.pages],
+    () =>
+      normalizedProject.pages.find((item) => item.id === pageId) ??
+      normalizedProject.pages[0],
+    [pageId, normalizedProject.pages],
   );
 
   useEffect(() => {
