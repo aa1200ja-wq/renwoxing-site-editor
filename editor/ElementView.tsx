@@ -11,7 +11,7 @@ type Props = {
   viewport: ViewportMode;
   editable?: boolean;
   selected?: boolean;
-  onSelect?: (id: string) => void;
+  onSelect?: (id: string, additive: boolean) => void;
   onAction?: (element: SiteElement) => void;
 };
 
@@ -51,7 +51,7 @@ export function ElementView({
       onMouseDown={(event) => {
         if (!editable) return;
         event.stopPropagation();
-        onSelect?.(element.id);
+        onSelect?.(element.id, event.ctrlKey || event.metaKey);
       }}
       onClick={() => {
         if (editable || !element.action) return;
@@ -78,13 +78,7 @@ function ElementContent({
   editable: boolean;
 }) {
   if (element.type === "image") {
-    return (
-      <img
-        src={element.content}
-        alt={element.name}
-        draggable={false}
-      />
-    );
+    return <img src={element.content} alt={element.name} draggable={false} />;
   }
 
   if (element.type === "youtube") {

@@ -1,0 +1,19 @@
+.page-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  margin: 0 0 18px;
+}
+.page-actions button {
+  margin: 0;
+  padding: 8px 7px;
+  font-size: 11px;
+}
+.page-actions .danger {
+  border-color: #9c4c3c;
+  color: #8d3024;
+}
+.site-element.selected {
+  outline: 2px solid #d8b56a;
+  outline-offset: 1px;
+}

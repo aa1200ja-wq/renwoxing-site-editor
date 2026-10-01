@@ -3,14 +3,17 @@
 import type { AddableElementType } from "./element-factory";
 import type { SitePage, SiteProject } from "./model";
 import "./inner-page-sync.css";
+import "./editor-sidebar-extra.css";
 
 type Props = {
   project: SiteProject;
   page: SitePage;
-  selectedId: string | null;
+  selectedIds: string[];
   onPageChange: (pageId: string) => void;
   onElementSelect: (elementId: string) => void;
   onAddElement: (type: AddableElementType) => void;
+  onAddPage: () => void;
+  onDeletePage: () => void;
   innerSyncAvailable: boolean;
   syncInnerPages: boolean;
   onSyncInnerPagesChange: (enabled: boolean) => void;
@@ -28,41 +31,42 @@ const addButtons: Array<{
   { type: "line", label: "＋ 線條" },
 ];
 
-export function EditorSidebar({
-  project,
-  page,
-  selectedId,
-  onPageChange,
-  onElementSelect,
-  onAddElement,
-  innerSyncAvailable,
-  syncInnerPages,
-  onSyncInnerPagesChange,
-  onApplyInnerTemplate,
-}: Props) {
+export function EditorSidebar(props: Props) {
   return (
     <aside className="editor-sidebar">
       <p className="panel-title">頁面</p>
       <div className="sidebar-section">
-        {project.pages.map((item) => (
+        {props.project.pages.map((item) => (
           <button
             key={item.id}
-            className={item.id === page.id ? "active" : ""}
-            onClick={() => onPageChange(item.id)}
+            className={item.id === props.page.id ? "active" : ""}
+            onClick={() => props.onPageChange(item.id)}
           >
             {item.name}
           </button>
         ))}
       </div>
 
-      {innerSyncAvailable && (
+      <div className="page-actions">
+        <button type="button" onClick={props.onAddPage}>＋ 新增分頁</button>
+        <button
+          type="button"
+          className="danger"
+          onClick={props.onDeletePage}
+          disabled={props.project.pages.length <= 1}
+        >
+          刪除分頁
+        </button>
+      </div>
+
+      {props.innerSyncAvailable && (
         <div className="inner-sync-box">
           <label>
             <input
               type="checkbox"
-              checked={syncInnerPages}
+              checked={props.syncInnerPages}
               onChange={(event) =>
-                onSyncInnerPagesChange(event.target.checked)
+                props.onSyncInnerPagesChange(event.target.checked)
               }
             />
             <strong>六個內頁連動</strong>
@@ -70,7 +74,7 @@ export function EditorSidebar({
           <small>
             共用版型的位置、尺寸、字級與顯示狀態會同步；各頁文字內容保留。
           </small>
-          <button type="button" onClick={onApplyInnerTemplate}>
+          <button type="button" onClick={props.onApplyInnerTemplate}>
             套用本頁共用版型到其他五頁
           </button>
         </div>
@@ -78,11 +82,13 @@ export function EditorSidebar({
 
       <p className="panel-title">所有元素</p>
       <div className="element-list">
-        {page.elements.map((element, index) => (
+        {props.page.elements.map((element, index) => (
           <button
             key={element.id}
-            className={element.id === selectedId ? "active" : ""}
-            onClick={() => onElementSelect(element.id)}
+            className={
+              props.selectedIds.includes(element.id) ? "active" : ""
+            }
+            onClick={() => props.onElementSelect(element.id)}
             title={element.name}
           >
             <span className="element-order">
@@ -100,7 +106,7 @@ export function EditorSidebar({
           <button
             key={item.type}
             type="button"
-            onClick={() => onAddElement(item.type)}
+            onClick={() => props.onAddElement(item.type)}
           >
             {item.label}
           </button>
