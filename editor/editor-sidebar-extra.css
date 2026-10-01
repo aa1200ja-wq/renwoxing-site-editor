@@ -17,3 +17,11 @@
   outline: 2px solid #d8b56a;
   outline-offset: 1px;
 }
+
+/* Ctrl/Command 按住時只做多選，不讓 Moveable 群組框攔截點擊。 */
+.editor-multi-picking .moveable-control-box,
+.editor-multi-picking .moveable-control,
+.editor-multi-picking .moveable-line,
+.editor-multi-picking .moveable-area {
+  pointer-events: none !important;
+}

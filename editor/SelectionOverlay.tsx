@@ -21,6 +21,33 @@ export function SelectionOverlay({
   const [targets, setTargets] = useState<HTMLElement[]>([]);
   const [guidelines, setGuidelines] = useState<HTMLElement[]>([]);
   const [canvasCenter, setCanvasCenter] = useState({ x: 0, y: 0 });
+  const [modifierHeld, setModifierHeld] = useState(false);
+
+  useEffect(() => {
+    const syncModifier = (event: KeyboardEvent) => {
+      setModifierHeld(event.ctrlKey || event.metaKey);
+    };
+    const clearModifier = () => setModifierHeld(false);
+
+    window.addEventListener("keydown", syncModifier);
+    window.addEventListener("keyup", syncModifier);
+    window.addEventListener("blur", clearModifier);
+    return () => {
+      window.removeEventListener("keydown", syncModifier);
+      window.removeEventListener("keyup", syncModifier);
+      window.removeEventListener("blur", clearModifier);
+    };
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle(
+      "editor-multi-picking",
+      modifierHeld,
+    );
+    return () => {
+      document.documentElement.classList.remove("editor-multi-picking");
+    };
+  }, [modifierHeld]);
 
   useEffect(() => {
     const all = Array.from(
@@ -46,10 +73,10 @@ export function SelectionOverlay({
     <>
       <Moveable
         target={target}
-        draggable
-        resizable={targets.length === 1}
-        rotatable={targets.length === 1}
-        snappable
+        draggable={!modifierHeld}
+        resizable={!modifierHeld && targets.length === 1}
+        rotatable={!modifierHeld && targets.length === 1}
+        snappable={!modifierHeld}
         origin={false}
         snapThreshold={6}
         snapGap
@@ -113,6 +140,7 @@ export function SelectionOverlay({
           });
         }}
       />
+
       <Selecto
         dragContainer=".editor-canvas"
         selectableTargets={["[data-editor-element='true']"]}
