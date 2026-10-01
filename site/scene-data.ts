@@ -17,8 +17,8 @@ export const sections: Array<{
     id: "about",
     label: "認識任我行",
     eyebrow: "ABOUT US",
-    title: "讓每一段旋律，都有自己的方向。",
-    body: "任我行薩克斯風社，以音樂相聚，也以舞台記錄彼此的故事。",
+    title: "十個不同的人，\n因為同一個夢想，走到了一起。",
+    body: "我們來自不同的行業，有著不同的人生，卻因為熱愛薩克斯風而相遇。十名團員，在工作與生活之外，把時間留給音樂，也把每一次練習與演出，變成一起前進的理由。",
   },
   {
     id: "events",
@@ -36,10 +36,10 @@ export const sections: Array<{
   },
   {
     id: "booking",
-    label: "演出邀約",
-    eyebrow: "BOOKING",
-    title: "讓薩克斯風，走進你的下一個現場。",
-    body: "舞台、活動與合作邀約，可在此查看演出資訊與聯絡方式。",
+    label: "加入我們",
+    eyebrow: "JOIN US",
+    title: "如果你也熱愛薩克斯風，\n下一段旋律，想和你一起吹。",
+    body: "不論來自哪個行業，只要還喜歡音樂，都歡迎加入任我行。一起練習、一起演出，把喜歡的事繼續下去。",
   },
   {
     id: "video",
