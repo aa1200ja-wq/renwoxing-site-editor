@@ -2,6 +2,7 @@
 
 import type { AddableElementType } from "./element-factory";
 import type { SitePage, SiteProject } from "./model";
+import { PageNameButton } from "./PageNameButton";
 import "./inner-page-sync.css";
 import "./editor-sidebar-extra.css";
 
@@ -10,6 +11,7 @@ type Props = {
   page: SitePage;
   selectedIds: string[];
   onPageChange: (pageId: string) => void;
+  onPageRename: (pageId: string, name: string) => void;
   onElementSelect: (elementId: string) => void;
   onAddElement: (type: AddableElementType) => void;
   onAddPage: () => void;
@@ -37,13 +39,13 @@ export function EditorSidebar(props: Props) {
       <p className="panel-title">頁面</p>
       <div className="sidebar-section">
         {props.project.pages.map((item) => (
-          <button
+          <PageNameButton
             key={item.id}
-            className={item.id === props.page.id ? "active" : ""}
-            onClick={() => props.onPageChange(item.id)}
-          >
-            {item.name}
-          </button>
+            name={item.name}
+            active={item.id === props.page.id}
+            onSelect={() => props.onPageChange(item.id)}
+            onRename={(name) => props.onPageRename(item.id, name)}
+          />
         ))}
       </div>
 

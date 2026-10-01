@@ -24,6 +24,7 @@ import type {
   ViewportMode,
 } from "./model";
 import { loadDraft, persistProject } from "./project-storage";
+import { renameProjectPage } from "./project-rename";
 const DELETE_SKIP_KEY = "renwoxing-page-delete-no-confirm";
 export function useEditorController(initialProject: SiteProject) {
   const [project, setProject] = useState(() =>
@@ -143,6 +144,10 @@ export function useEditorController(initialProject: SiteProject) {
       setClipboard({ ...clipboard, mode: "copy" });
     }
   }
+  function renamePage(targetPageId: string, name: string) {
+    setProject((current) => renameProjectPage(current, targetPageId, name));
+    setSaveState("分頁名稱已修改，尚未儲存");
+  }
   function addPage() {
     const name = window.prompt("新分頁名稱", "新分頁")?.trim();
     if (!name) return;
@@ -224,13 +229,18 @@ export function useEditorController(initialProject: SiteProject) {
     }));
   const patchComponentData = (componentData: ComponentData) =>
     updateSelected((element) => ({ ...element, componentData }), false);
+  const patchSharedStyle = (patch: Record<string, string | number>) =>
+    updateSelected((element) => ({
+      ...element,
+      style: { ...element.style, ...patch },
+    }));
   return {
     project, page, viewport, selectedIds, selectedId, selectedElement,
     syncInnerPages, saveState, saving, clipboard, menu, deleteDialog,
     setSelectedIds, setSyncInnerPages, setMenu, setDeleteDialog,
     selectElement, patchLayouts, addElement, deleteSelectedElements,
-    copyOrCut, pasteElements, addPage, requestDeletePage,
+    copyOrCut, pasteElements, renamePage, addPage, requestDeletePage,
     confirmDeletePage, save, changePage, changeViewport, applyTemplate,
-    patchContent, patchStyle, patchSetting, patchComponentData,
+    patchContent, patchStyle, patchSharedStyle, patchSetting, patchComponentData,
   };
 }

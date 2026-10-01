@@ -46,6 +46,7 @@ export function EditorShell({ initialProject }: { initialProject: SiteProject })
         page={c.page}
         selectedIds={c.selectedIds}
         onPageChange={c.changePage}
+        onPageRename={c.renamePage}
         onElementSelect={(id) => c.selectElement(id)}
         onAddElement={c.addElement}
         onAddPage={c.addPage}
@@ -91,6 +92,7 @@ export function EditorShell({ initialProject }: { initialProject: SiteProject })
         }
         onContentChange={c.patchContent}
         onStyleChange={c.patchStyle}
+        onSharedStyleChange={c.patchSharedStyle}
         onSettingChange={c.patchSetting}
         onComponentDataChange={c.patchComponentData}
         onDelete={c.deleteSelectedElements}
