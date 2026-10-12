@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "build:cloudflare": "opennextjs-cloudflare build",
+    "deploy:cloudflare": "opennextjs-cloudflare deploy",
+    "preview:cloudflare": "opennextjs-cloudflare preview"
   },
   "dependencies": {
     "@craftjs/core": "^0.2.12",
@@ -14,12 +17,14 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-moveable": "^0.56.0",
-    "react-selecto": "^1.26.3"
+    "react-selecto": "^1.26.3",
+    "@opennextjs/cloudflare": "1.20.10"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
-    "typescript": "^5.9.0"
+    "typescript": "^5.9.0",
+    "wrangler": "4.135.0"
   }
 }
